@@ -323,7 +323,8 @@
             <span class="key">W A S D</span> Déplacer | 
             <span class="key">SOURIS</span> Regarder | 
             <span class="key">SHIFT</span> Courir |
-            <span class="key">ESPACE</span> Sauter
+            <span class="key">ESPACE</span> Sauter |
+            <span class="key">E</span> Animation
         </div>
     </div>
 
@@ -693,6 +694,8 @@
         let armSwing = 0;
         let isMoving = false;
         let isRunning = false;
+        let isAnimating = false;
+        let animationTime = 0;
 
         document.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
@@ -700,23 +703,24 @@
                 isJumping = true;
                 verticalVelocity = jumpForce;
             }
+            // Trigger stylish animation with E key
+            if (e.key.toLowerCase() === 'e' && !isAnimating) {
+                isAnimating = true;
+                animationTime = 0;
+            }
         });
         
         document.addEventListener('keyup', (e) => {
             keys[e.key.toLowerCase()] = false;
         });
         
-        let lastMouseX = 0, lastMouseY = 0;
+        // Direct mouse movement - no previous position needed
         document.addEventListener('mousemove', (e) => {
-            const deltaX = e.clientX - lastMouseX;
-            const deltaY = e.clientY - lastMouseY;
-            
-            rotationY -= deltaX * 0.002;
-            rotationX -= deltaY * 0.002;
-            rotationX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, rotationX));
-            
-            lastMouseX = e.clientX;
-            lastMouseY = e.clientY;
+            if (document.pointerLockElement === canvas) {
+                rotationY -= e.movementX * 0.002;
+                rotationX -= e.movementY * 0.002;
+                rotationX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, rotationX));
+            }
         });
 
         // Minimap
@@ -829,7 +833,61 @@
             camera.rotation.x = rotationX;
             
             // Arm animations
-            if (isMoving) {
+            if (isAnimating) {
+                // Stylish animation sequence
+                animationTime += 0.05;
+                
+                if (animationTime < 1.0) {
+                    // Phase 1: Arms go up and cross
+                    const t = animationTime;
+                    rightArm.rotation.x = 0.3 - t * 2.5;
+                    leftArm.rotation.x = 0.3 - t * 2.5;
+                    rightArm.rotation.z = -0.2 - t * 1.5;
+                    leftArm.rotation.z = 0.2 + t * 1.5;
+                    rightArm.rotation.y = t * 0.8;
+                    leftArm.rotation.y = -t * 0.8;
+                } else if (animationTime < 1.5) {
+                    // Phase 2: Spin and extend
+                    const t = (animationTime - 1.0) * 2;
+                    rightArm.rotation.x = -2.2 + Math.sin(t * Math.PI * 2) * 0.5;
+                    leftArm.rotation.x = -2.2 + Math.sin(t * Math.PI * 2 + Math.PI) * 0.5;
+                    rightArm.rotation.z = -1.7 + Math.cos(t * Math.PI * 2) * 0.3;
+                    leftArm.rotation.z = 1.7 - Math.cos(t * Math.PI * 2) * 0.3;
+                    rightArm.rotation.y = 0.8 + t * Math.PI;
+                    leftArm.rotation.y = -0.8 - t * Math.PI;
+                } else if (animationTime < 2.5) {
+                    // Phase 3: Victory pose
+                    const t = (animationTime - 1.5);
+                    const easeOut = 1 - Math.pow(1 - t, 3);
+                    rightArm.rotation.x = -2.2 + easeOut * 2.8;
+                    leftArm.rotation.x = -2.2 + easeOut * 2.8;
+                    rightArm.rotation.z = -1.7 + easeOut * 2.2;
+                    leftArm.rotation.z = 1.7 - easeOut * 2.2;
+                    rightArm.rotation.y = 0.8 + Math.PI - easeOut * (0.8 + Math.PI);
+                    leftArm.rotation.y = -0.8 - Math.PI + easeOut * (0.8 + Math.PI);
+                } else if (animationTime < 3.0) {
+                    // Phase 4: Return to idle
+                    const t = (animationTime - 2.5) * 2;
+                    const easeIn = 1 - Math.pow(1 - t, 2);
+                    rightArm.rotation.x = 0.6 - easeIn * 0.3;
+                    leftArm.rotation.x = 0.6 - easeIn * 0.3;
+                    rightArm.rotation.z = 0.5 - easeIn * 0.7;
+                    leftArm.rotation.z = -0.5 + easeIn * 0.7;
+                    rightArm.rotation.y = 0;
+                    leftArm.rotation.y = 0;
+                } else {
+                    // Animation complete
+                    isAnimating = false;
+                    animationTime = 0;
+                }
+                
+                // Add cool camera shake during animation
+                if (animationTime > 0.5 && animationTime < 2.0) {
+                    camera.position.x += (Math.random() - 0.5) * 0.01;
+                    camera.position.y += (Math.random() - 0.5) * 0.01;
+                }
+                
+            } else if (isMoving) {
                 const swingSpeed = isRunning ? 0.25 : 0.15;
                 armSwing += swingSpeed;
                 
@@ -839,12 +897,16 @@
                 
                 rightArm.rotation.z = -0.2 + Math.sin(armSwing) * 0.05;
                 leftArm.rotation.z = 0.2 - Math.sin(armSwing) * 0.05;
+                rightArm.rotation.y = 0;
+                leftArm.rotation.y = 0;
             } else {
                 armSwing = 0;
                 rightArm.rotation.x += (0.3 - rightArm.rotation.x) * 0.1;
                 leftArm.rotation.x += (0.3 - leftArm.rotation.x) * 0.1;
                 rightArm.rotation.z += (-0.2 - rightArm.rotation.z) * 0.1;
                 leftArm.rotation.z += (0.2 - leftArm.rotation.z) * 0.1;
+                rightArm.rotation.y *= 0.9;
+                leftArm.rotation.y *= 0.9;
             }
             
             // Breathing animation
