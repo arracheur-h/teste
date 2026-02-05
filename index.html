@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox FPS - Vue 3D Immersive</title>
+    <title>FPS - Roblox Style</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Bebas+Neue&display=swap');
 
         * {
             margin: 0;
@@ -16,31 +16,15 @@
         body {
             font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
-            cursor: none;
             background: #000;
         }
 
-        #gameCanvas {
+        canvas {
             display: block;
             width: 100vw;
             height: 100vh;
         }
 
-        /* Custom Cursor */
-        .cursor {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-
-        /* HUD Elements */
         .hud {
             position: fixed;
             top: 0;
@@ -48,7 +32,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .crosshair {
@@ -56,207 +40,146 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
         }
 
-        .crosshair-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+        .crosshair-dot {
             width: 4px;
             height: 4px;
             background: #00ff00;
             border-radius: 50%;
+            box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+            position: absolute;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px #00ff00;
         }
 
         .crosshair-line {
             position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
         }
 
-        .crosshair-top {
-            width: 2px;
-            height: 12px;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .crosshair-bottom {
-            width: 2px;
-            height: 12px;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .crosshair-left {
-            width: 12px;
-            height: 2px;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .crosshair-right {
-            width: 12px;
-            height: 2px;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-        }
+        .crosshair-top { width: 2px; height: 10px; top: -15px; left: 50%; transform: translateX(-50%); }
+        .crosshair-bottom { width: 2px; height: 10px; bottom: -15px; left: 50%; transform: translateX(-50%); }
+        .crosshair-left { width: 10px; height: 2px; left: -15px; top: 50%; transform: translateY(-50%); }
+        .crosshair-right { width: 10px; height: 2px; right: -15px; top: 50%; transform: translateY(-50%); }
 
         .stats {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .stats-panel {
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 40, 0.8) 100%);
-            backdrop-filter: blur(15px);
-            padding: 20px 25px;
-            border-radius: 15px;
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.1);
-            margin-bottom: 15px;
-            animation: statsPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes statsPulse {
-            0%, 100% { border-color: rgba(0, 255, 255, 0.3); }
-            50% { border-color: rgba(0, 255, 255, 0.6); }
-        }
-
-        .stat-item {
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 30, 0.9));
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            color: #fff;
             font-size: 16px;
-            margin: 8px 0;
+            min-width: 250px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-row {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
         }
 
         .stat-label {
-            color: #00ffff;
-            font-weight: 600;
+            color: #00ff88;
+            font-weight: 700;
         }
 
         .stat-value {
-            color: #ffff00;
-            font-weight: 700;
-            font-size: 18px;
+            color: #fff;
+            font-weight: 600;
         }
 
-        .minimap {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 200px;
-            height: 200px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 3px solid rgba(0, 255, 255, 0.5);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        }
-
-        .minimap-title {
-            text-align: center;
-            color: #00ffff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            padding: 5px;
-            background: rgba(0, 255, 255, 0.2);
-            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
-        }
-
-        /* Instructions */
-        .instructions {
+        .controls {
             position: absolute;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 40, 0.9) 100%);
-            backdrop-filter: blur(15px);
-            padding: 20px 40px;
-            border-radius: 20px;
-            color: white;
-            text-align: center;
-            font-size: 16px;
-            border: 2px solid rgba(0, 255, 255, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 30, 0.9));
+            padding: 15px 30px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 20px;
+            align-items: center;
         }
 
         .key {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 200, 255, 0.3));
-            padding: 8px 15px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 200, 100, 0.2));
+            padding: 8px 16px;
             border-radius: 8px;
-            margin: 0 5px;
+            border: 2px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
             font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-            border: 2px solid rgba(0, 255, 255, 0.5);
-            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 1px;
         }
 
-        .loading-screen {
+        .separator {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+        }
+
+        .start-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #0a0a0a, #1a1a3e);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
-            transition: opacity 0.5s ease;
+            z-index: 1000;
+            transition: opacity 0.5s;
         }
 
-        .loading-screen.hidden {
+        .start-screen.hidden {
             opacity: 0;
             pointer-events: none;
         }
 
-        .loading-text {
-            color: #00ffff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 36px;
-            font-weight: 900;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
-            animation: loadingPulse 1.5s ease-in-out infinite;
+        .start-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 72px;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3);
+            margin-bottom: 40px;
+            letter-spacing: 4px;
         }
 
-        @keyframes loadingPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .loading-bar {
-            width: 400px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
+        .start-button {
+            padding: 20px 50px;
+            font-size: 24px;
+            font-family: 'Bebas Neue', sans-serif;
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            border: none;
             border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid rgba(0, 255, 255, 0.3);
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
         }
 
-        .loading-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #00ffff, #00ff00);
-            width: 0%;
-            transition: width 0.3s ease;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        .start-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
         }
 
         .vignette {
@@ -265,700 +188,340 @@
             left: 0;
             width: 100%;
             height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
             pointer-events: none;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
-            z-index: 999;
+            z-index: 50;
         }
     </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-text">ROBLOX FPS</div>
-        <div class="loading-bar">
-            <div class="loading-progress" id="loadingProgress"></div>
-        </div>
+    <div class="start-screen" id="startScreen">
+        <div class="start-title">ROBLOX FPS</div>
+        <button class="start-button" id="startButton">COMMENCER</button>
     </div>
 
-    <div class="cursor" id="cursor"></div>
-    <canvas id="gameCanvas"></canvas>
+    <canvas id="canvas"></canvas>
     <div class="vignette"></div>
-    
-    <!-- HUD -->
+
     <div class="hud">
         <div class="crosshair">
-            <div class="crosshair-center"></div>
+            <div class="crosshair-dot"></div>
             <div class="crosshair-line crosshair-top"></div>
             <div class="crosshair-line crosshair-bottom"></div>
             <div class="crosshair-line crosshair-left"></div>
             <div class="crosshair-line crosshair-right"></div>
         </div>
-        
+
         <div class="stats">
-            <div class="stats-panel">
-                <div class="stat-item">
-                    <span class="stat-label">📍 POSITION:</span>
-                    <span class="stat-value" id="position">X: 0 | Y: 0 | Z: 0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">🔄 ROTATION:</span>
-                    <span class="stat-value" id="rotation">0°</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">⚡ FPS:</span>
-                    <span class="stat-value" id="fps">60</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">💨 VITESSE:</span>
-                    <span class="stat-value" id="speed">0.0 m/s</span>
-                </div>
+            <div class="stat-row">
+                <span class="stat-label">POS</span>
+                <span class="stat-value" id="posDisplay">0, 0, 0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">FPS</span>
+                <span class="stat-value" id="fpsDisplay">60</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">VITESSE</span>
+                <span class="stat-value" id="speedDisplay">0.0</span>
             </div>
         </div>
 
-        <div class="minimap">
-            <div class="minimap-title">CARTE</div>
-            <canvas id="minimapCanvas" width="200" height="180"></canvas>
-        </div>
-        
-        <div class="instructions">
-            <span class="key">W A S D</span> Déplacer | 
-            <span class="key">SOURIS</span> Regarder | 
-            <span class="key">SHIFT</span> Courir |
-            <span class="key">ESPACE</span> Sauter |
-            <span class="key">E</span> Animation
+        <div class="controls">
+            <span class="key">WASD</span>
+            <span class="separator">•</span>
+            <span class="key">SHIFT</span>
+            <span class="separator">•</span>
+            <span class="key">ESPACE</span>
+            <span class="separator">•</span>
+            <span class="key">E</span>
+            <span style="color: #fff; font-size: 12px;">INSPECT</span>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Loading screen
-        let loadProgress = 0;
-        const loadingInterval = setInterval(() => {
-            loadProgress += Math.random() * 15;
-            if (loadProgress >= 100) {
-                loadProgress = 100;
-                clearInterval(loadingInterval);
-                setTimeout(() => {
-                    document.getElementById('loadingScreen').classList.add('hidden');
-                }, 500);
-            }
-            document.getElementById('loadingProgress').style.width = loadProgress + '%';
-        }, 100);
+        // Start screen
+        const startScreen = document.getElementById('startScreen');
+        const startButton = document.getElementById('startButton');
+        const canvas = document.getElementById('canvas');
 
-        // Custom cursor
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
+        let gameStarted = false;
+
+        startButton.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            gameStarted = true;
+            canvas.requestPointerLock();
         });
 
         // Scene setup
-        const canvas = document.getElementById('gameCanvas');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x87CEEB, 10, 100);
-        
+        scene.background = new THREE.Color(0x87CEEB);
+        scene.fog = new THREE.Fog(0x87CEEB, 50, 200);
+
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ 
-            canvas, 
-            antialias: true,
-            powerPreference: "high-performance"
-        });
-        
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-        // Camera setup
-        camera.position.set(0, 1.7, 0);
-        
-        // Beautiful Sky with gradient
-        const skyGeometry = new THREE.SphereGeometry(500, 64, 64);
-        const skyMaterial = new THREE.ShaderMaterial({
-            side: THREE.BackSide,
-            uniforms: {
-                time: { value: 0 }
-            },
-            vertexShader: `
-                varying vec3 vWorldPosition;
-                void main() {
-                    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-                    vWorldPosition = worldPosition.xyz;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform float time;
-                varying vec3 vWorldPosition;
-                
-                void main() {
-                    vec3 direction = normalize(vWorldPosition);
-                    float elevation = direction.y;
-                    
-                    // Beautiful gradient from horizon to zenith
-                    vec3 horizonColor = vec3(1.0, 0.4, 0.6); // Pink-orange
-                    vec3 zenithColor = vec3(0.1, 0.15, 0.4); // Deep blue
-                    vec3 midColor = vec3(0.4, 0.3, 0.8); // Purple
-                    
-                    vec3 skyColor;
-                    if (elevation > 0.0) {
-                        skyColor = mix(midColor, zenithColor, elevation);
-                    } else {
-                        skyColor = mix(horizonColor, midColor, elevation + 1.0);
-                    }
-                    
-                    // Add stars
-                    float stars = 0.0;
-                    vec3 starPos = direction * 100.0;
-                    stars += smoothstep(0.99, 1.0, sin(starPos.x * 200.0) * sin(starPos.y * 200.0) * sin(starPos.z * 200.0));
-                    
-                    // Animated nebula effect
-                    float nebula = sin(direction.x * 3.0 + time * 0.1) * 
-                                   cos(direction.y * 3.0 + time * 0.15) * 
-                                   sin(direction.z * 3.0) * 0.3 + 0.7;
-                    
-                    skyColor = skyColor * nebula + stars * vec3(1.0);
-                    
-                    gl_FragColor = vec4(skyColor, 1.0);
-                }
-            `
-        });
-        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
-        scene.add(sky);
-
-        // Sun
-        const sunGeometry = new THREE.SphereGeometry(20, 32, 32);
-        const sunMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffff00,
-            emissive: 0xffff00,
-            emissiveIntensity: 2
-        });
-        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-        sun.position.set(200, 150, -300);
-        scene.add(sun);
-
-        // Sun glow
-        const sunGlowGeometry = new THREE.SphereGeometry(25, 32, 32);
-        const sunGlowMaterial = new THREE.ShaderMaterial({
-            transparent: true,
-            uniforms: {
-                time: { value: 0 }
-            },
-            vertexShader: `
-                varying vec3 vNormal;
-                void main() {
-                    vNormal = normalize(normalMatrix * normal);
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                varying vec3 vNormal;
-                uniform float time;
-                void main() {
-                    float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-                    vec3 glowColor = vec3(1.0, 0.8, 0.2);
-                    gl_FragColor = vec4(glowColor * intensity, intensity * 0.8);
-                }
-            `
-        });
-        const sunGlow = new THREE.Mesh(sunGlowGeometry, sunGlowMaterial);
-        sunGlow.position.copy(sun.position);
-        scene.add(sunGlow);
-
         // Lighting
-        const ambientLight = new THREE.AmbientLight(0x8888ff, 0.3);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
 
-        const sunLight = new THREE.DirectionalLight(0xffd700, 1.5);
-        sunLight.position.set(200, 150, -300);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        sunLight.position.set(100, 200, 100);
         sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 4096;
-        sunLight.shadow.mapSize.height = 4096;
-        sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 1000;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
         sunLight.shadow.camera.left = -100;
         sunLight.shadow.camera.right = 100;
         sunLight.shadow.camera.top = 100;
         sunLight.shadow.camera.bottom = -100;
-        sunLight.shadow.bias = -0.0001;
         scene.add(sunLight);
 
-        // Rim lighting
-        const rimLight1 = new THREE.DirectionalLight(0xff00ff, 0.3);
-        rimLight1.position.set(-50, 20, 50);
-        scene.add(rimLight1);
-
-        const rimLight2 = new THREE.DirectionalLight(0x00ffff, 0.3);
-        rimLight2.position.set(50, 20, -50);
-        scene.add(rimLight2);
-
-        // Beautiful black reflective ground
-        const groundGeometry = new THREE.PlaneGeometry(500, 500, 1, 1);
-        const groundMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x000000,
-            roughness: 0.1,
-            metalness: 0.9,
-            envMapIntensity: 1.0
+        // Ground
+        const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+        const groundMaterial = new THREE.MeshStandardMaterial({
+            color: 0x111111,
+            roughness: 0.8,
+            metalness: 0.2
         });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // Grid overlay on ground
-        const gridHelper = new THREE.GridHelper(500, 100, 0x444444, 0x222222);
-        gridHelper.material.opacity = 0.3;
+        // Grid
+        const gridHelper = new THREE.GridHelper(1000, 100, 0x00ff88, 0x003322);
+        gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
 
-        // Roblox R6 Arms - More detailed
-        const armGroup = new THREE.Group();
-        
-        function createR6Arm(isRight) {
-            const armContainer = new THREE.Group();
-            
-            // Shoulder joint
-            const shoulderGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-            const jointMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0xFFAA00,
-                flatShading: true,
-                shininess: 50
-            });
-            const shoulder = new THREE.Mesh(shoulderGeometry, jointMaterial);
-            armContainer.add(shoulder);
+        // Create R6 Arms
+        function createArm(isRight) {
+            const armGroup = new THREE.Group();
             
             // Upper arm
-            const upperArmGeometry = new THREE.BoxGeometry(0.18, 0.6, 0.18);
-            const armMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0xFFC300,
+            const upperArmGeo = new THREE.BoxGeometry(0.2, 0.6, 0.2);
+            const armMat = new THREE.MeshStandardMaterial({
+                color: 0xFFCC00,
                 flatShading: true,
-                shininess: 30
+                roughness: 0.7
             });
-            const upperArm = new THREE.Mesh(upperArmGeometry, armMaterial);
-            upperArm.position.y = -0.4;
+            const upperArm = new THREE.Mesh(upperArmGeo, armMat);
             upperArm.castShadow = true;
-            armContainer.add(upperArm);
-            
-            // Elbow joint
-            const elbowGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
-            const elbow = new THREE.Mesh(elbowGeometry, jointMaterial);
-            elbow.position.y = -0.7;
-            armContainer.add(elbow);
-            
+            armGroup.add(upperArm);
+
             // Lower arm
-            const lowerArmGeometry = new THREE.BoxGeometry(0.18, 0.6, 0.18);
-            const lowerArm = new THREE.Mesh(lowerArmGeometry, armMaterial);
-            lowerArm.position.y = -1.1;
+            const lowerArmGeo = new THREE.BoxGeometry(0.2, 0.6, 0.2);
+            const lowerArm = new THREE.Mesh(lowerArmGeo, armMat);
+            lowerArm.position.y = -0.6;
             lowerArm.castShadow = true;
-            armContainer.add(lowerArm);
-            
-            // Wrist joint
-            const wristGeometry = new THREE.BoxGeometry(0.2, 0.15, 0.2);
-            const wrist = new THREE.Mesh(wristGeometry, jointMaterial);
-            wrist.position.y = -1.45;
-            armContainer.add(wrist);
-            
+            armGroup.add(lowerArm);
+
             // Hand
-            const handGeometry = new THREE.BoxGeometry(0.22, 0.3, 0.22);
-            const handMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0xFFD700,
+            const handGeo = new THREE.BoxGeometry(0.25, 0.25, 0.25);
+            const handMat = new THREE.MeshStandardMaterial({
+                color: 0xFFDD44,
                 flatShading: true,
-                shininess: 60
+                roughness: 0.6
             });
-            const hand = new THREE.Mesh(handGeometry, handMaterial);
-            hand.position.y = -1.7;
+            const hand = new THREE.Mesh(handGeo, handMat);
+            hand.position.y = -0.95;
             hand.castShadow = true;
-            armContainer.add(hand);
-            
-            // Fingers
-            for (let i = 0; i < 5; i++) {
-                const fingerGeometry = new THREE.BoxGeometry(0.05, 0.15, 0.05);
-                const finger = new THREE.Mesh(fingerGeometry, handMaterial);
-                finger.position.set(
-                    (i - 2) * 0.055 - 0.01,
-                    -1.85,
-                    0.08
-                );
-                finger.castShadow = true;
-                armContainer.add(finger);
-            }
-            
-            // Position arm
-            const side = isRight ? 1 : -1;
-            armContainer.position.set(0.4 * side, -0.2, -0.35);
-            armContainer.rotation.z = -0.2 * side;
-            armContainer.rotation.x = 0.3;
-            
-            // Store parts for animation
-            armContainer.userData = {
-                shoulder, upperArm, elbow, lowerArm, wrist, hand
-            };
-            
-            return armContainer;
+            armGroup.add(hand);
+
+            armGroup.userData = { upperArm, lowerArm, hand };
+            return armGroup;
         }
-        
-        const rightArm = createR6Arm(true);
-        const leftArm = createR6Arm(false);
-        
-        armGroup.add(rightArm, leftArm);
-        camera.add(armGroup);
+
+        const rightArm = createArm(true);
+        rightArm.position.set(0.4, -0.3, -0.6);
+        rightArm.rotation.z = -0.3;
+
+        const leftArm = createArm(false);
+        leftArm.position.set(-0.4, -0.3, -0.6);
+        leftArm.rotation.z = 0.3;
+
+        const armsGroup = new THREE.Group();
+        armsGroup.add(rightArm, leftArm);
+        camera.add(armsGroup);
         scene.add(camera);
 
-        // Atmospheric particles with beautiful colors
-        const particleGeometry = new THREE.BufferGeometry();
-        const particleCount = 1000;
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
-        const sizes = new Float32Array(particleCount);
-        
-        for (let i = 0; i < particleCount; i++) {
-            positions[i * 3] = (Math.random() - 0.5) * 300;
-            positions[i * 3 + 1] = Math.random() * 100 + 10;
-            positions[i * 3 + 2] = (Math.random() - 0.5) * 300;
-            
-            // Beautiful particle colors
-            const colorChoice = Math.random();
-            if (colorChoice < 0.33) {
-                colors[i * 3] = 1.0;
-                colors[i * 3 + 1] = 0.4;
-                colors[i * 3 + 2] = 0.8; // Pink
-            } else if (colorChoice < 0.66) {
-                colors[i * 3] = 0.4;
-                colors[i * 3 + 1] = 0.8;
-                colors[i * 3 + 2] = 1.0; // Cyan
-            } else {
-                colors[i * 3] = 1.0;
-                colors[i * 3 + 1] = 1.0;
-                colors[i * 3 + 2] = 0.8; // Light yellow
-            }
-            
-            sizes[i] = Math.random() * 2 + 0.5;
-        }
-        
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-        
-        const particleMaterial = new THREE.ShaderMaterial({
-            transparent: true,
-            vertexColors: true,
-            uniforms: {
-                time: { value: 0 }
-            },
-            vertexShader: `
-                attribute float size;
-                attribute vec3 color;
-                varying vec3 vColor;
-                uniform float time;
-                
-                void main() {
-                    vColor = color;
-                    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-                    
-                    // Pulsating effect
-                    float pulse = sin(time + position.x + position.z) * 0.3 + 1.0;
-                    gl_PointSize = size * pulse * (300.0 / -mvPosition.z);
-                    gl_Position = projectionMatrix * mvPosition;
-                }
-            `,
-            fragmentShader: `
-                varying vec3 vColor;
-                
-                void main() {
-                    float distance = length(gl_PointCoord - vec2(0.5));
-                    if (distance > 0.5) discard;
-                    
-                    float alpha = 1.0 - (distance * 2.0);
-                    alpha = pow(alpha, 2.0);
-                    
-                    gl_FragColor = vec4(vColor, alpha * 0.8);
-                }
-            `
-        });
-        
-        const particles = new THREE.Points(particleGeometry, particleMaterial);
-        scene.add(particles);
+        camera.position.set(0, 1.7, 0);
 
-        // Player controls
-        const moveSpeed = 0.15;
-        const runMultiplier = 2;
+        // Player movement
         const keys = {};
-        let mouseX = 0, mouseY = 0;
-        let rotationY = 0, rotationX = 0;
+        let moveSpeed = 0.15;
         let velocity = new THREE.Vector3();
-        let isJumping = false;
-        let verticalVelocity = 0;
-        const gravity = -0.02;
-        const jumpForce = 0.4;
-        
-        // Arm animation
-        let armSwing = 0;
-        let isMoving = false;
-        let isRunning = false;
-        let isAnimating = false;
-        let animationTime = 0;
+        let canJump = false;
+        let rotationX = 0;
+        let rotationY = 0;
+
+        // Animation state
+        let isInspecting = false;
+        let inspectTime = 0;
 
         document.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
-            if (e.key === ' ' && !isJumping) {
-                isJumping = true;
-                verticalVelocity = jumpForce;
+            
+            if (e.key === ' ' && canJump) {
+                velocity.y = 0.3;
+                canJump = false;
             }
-            // Trigger stylish animation with E key
-            if (e.key.toLowerCase() === 'e' && !isAnimating) {
-                isAnimating = true;
-                animationTime = 0;
+
+            if (e.key.toLowerCase() === 'e' && !isInspecting) {
+                isInspecting = true;
+                inspectTime = 0;
             }
         });
-        
+
         document.addEventListener('keyup', (e) => {
             keys[e.key.toLowerCase()] = false;
         });
-        
-        // Direct mouse movement - no previous position needed
+
         document.addEventListener('mousemove', (e) => {
-            if (document.pointerLockElement === canvas) {
+            if (document.pointerLockElement === canvas && gameStarted) {
                 rotationY -= e.movementX * 0.002;
                 rotationX -= e.movementY * 0.002;
-                rotationX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, rotationX));
+                rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
             }
         });
 
-        // Minimap
-        const minimapCanvas = document.getElementById('minimapCanvas');
-        const minimapCtx = minimapCanvas.getContext('2d');
-        
-        function updateMinimap() {
-            minimapCtx.fillStyle = 'rgba(0, 20, 40, 0.9)';
-            minimapCtx.fillRect(0, 0, 200, 180);
-            
-            // Grid
-            minimapCtx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
-            minimapCtx.lineWidth = 1;
-            for (let i = 0; i <= 200; i += 20) {
-                minimapCtx.beginPath();
-                minimapCtx.moveTo(i, 0);
-                minimapCtx.lineTo(i, 180);
-                minimapCtx.stroke();
-                
-                minimapCtx.beginPath();
-                minimapCtx.moveTo(0, i);
-                minimapCtx.lineTo(200, i);
-                minimapCtx.stroke();
+        canvas.addEventListener('click', () => {
+            if (gameStarted) {
+                canvas.requestPointerLock();
             }
-            
-            // Player position (center of minimap)
-            const centerX = 100;
-            const centerY = 90;
-            
-            // Player marker
-            minimapCtx.save();
-            minimapCtx.translate(centerX, centerY);
-            minimapCtx.rotate(-rotationY);
-            
-            minimapCtx.fillStyle = '#00ff00';
-            minimapCtx.beginPath();
-            minimapCtx.moveTo(0, -8);
-            minimapCtx.lineTo(-5, 5);
-            minimapCtx.lineTo(5, 5);
-            minimapCtx.closePath();
-            minimapCtx.fill();
-            
-            minimapCtx.strokeStyle = '#ffffff';
-            minimapCtx.lineWidth = 2;
-            minimapCtx.stroke();
-            
-            minimapCtx.restore();
-        }
-
-        // FPS Counter
-        let lastTime = performance.now();
-        let frames = 0;
-        let fps = 60;
+        });
 
         // Animation loop
+        let lastTime = performance.now();
+        let frameCount = 0;
+        let fps = 60;
+
         function animate() {
             requestAnimationFrame(animate);
-            
-            // FPS
-            frames++;
+
+            if (!gameStarted) return;
+
+            // FPS counter
+            frameCount++;
             const currentTime = performance.now();
             if (currentTime >= lastTime + 1000) {
-                fps = Math.round(frames * 1000 / (currentTime - lastTime));
-                document.getElementById('fps').textContent = fps;
-                frames = 0;
+                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                document.getElementById('fpsDisplay').textContent = fps;
+                frameCount = 0;
                 lastTime = currentTime;
             }
-            
+
             // Movement
-            isMoving = false;
-            isRunning = keys['shift'];
-            const currentSpeed = moveSpeed * (isRunning ? runMultiplier : 1);
-            const moveVector = new THREE.Vector3();
+            const moveDirection = new THREE.Vector3();
+            const isMoving = keys['w'] || keys['a'] || keys['s'] || keys['d'] || keys['z'] || keys['q'];
+            const speed = keys['shift'] ? moveSpeed * 2 : moveSpeed;
+
+            if (keys['w'] || keys['z']) moveDirection.z -= speed;
+            if (keys['s']) moveDirection.z += speed;
+            if (keys['a'] || keys['q']) moveDirection.x -= speed;
+            if (keys['d']) moveDirection.x += speed;
+
+            moveDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotationY);
             
-            if (keys['z'] || keys['w']) {
-                moveVector.z -= currentSpeed;
-                isMoving = true;
+            camera.position.x += moveDirection.x;
+            camera.position.z += moveDirection.z;
+
+            // Gravity
+            velocity.y -= 0.015;
+            camera.position.y += velocity.y;
+
+            if (camera.position.y <= 1.7) {
+                camera.position.y = 1.7;
+                velocity.y = 0;
+                canJump = true;
             }
-            if (keys['s']) {
-                moveVector.z += currentSpeed;
-                isMoving = true;
-            }
-            if (keys['q'] || keys['a']) {
-                moveVector.x -= currentSpeed;
-                isMoving = true;
-            }
-            if (keys['d']) {
-                moveVector.x += currentSpeed;
-                isMoving = true;
-            }
-            
-            // Apply rotation to movement
-            moveVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotationY);
-            camera.position.add(moveVector);
-            
-            // Jumping and gravity
-            if (isJumping) {
-                verticalVelocity += gravity;
-                camera.position.y += verticalVelocity;
-                
-                if (camera.position.y <= 1.7) {
-                    camera.position.y = 1.7;
-                    isJumping = false;
-                    verticalVelocity = 0;
-                }
-            }
-            
+
             // Camera rotation
+            camera.rotation.order = 'YXZ';
             camera.rotation.y = rotationY;
             camera.rotation.x = rotationX;
-            
+
             // Arm animations
-            if (isAnimating) {
-                // Stylish animation sequence
-                animationTime += 0.05;
+            if (isInspecting) {
+                inspectTime += 0.016;
                 
-                if (animationTime < 1.0) {
-                    // Phase 1: Arms go up and cross
-                    const t = animationTime;
-                    rightArm.rotation.x = 0.3 - t * 2.5;
-                    leftArm.rotation.x = 0.3 - t * 2.5;
-                    rightArm.rotation.z = -0.2 - t * 1.5;
-                    leftArm.rotation.z = 0.2 + t * 1.5;
-                    rightArm.rotation.y = t * 0.8;
-                    leftArm.rotation.y = -t * 0.8;
-                } else if (animationTime < 1.5) {
-                    // Phase 2: Spin and extend
-                    const t = (animationTime - 1.0) * 2;
-                    rightArm.rotation.x = -2.2 + Math.sin(t * Math.PI * 2) * 0.5;
-                    leftArm.rotation.x = -2.2 + Math.sin(t * Math.PI * 2 + Math.PI) * 0.5;
-                    rightArm.rotation.z = -1.7 + Math.cos(t * Math.PI * 2) * 0.3;
-                    leftArm.rotation.z = 1.7 - Math.cos(t * Math.PI * 2) * 0.3;
-                    rightArm.rotation.y = 0.8 + t * Math.PI;
-                    leftArm.rotation.y = -0.8 - t * Math.PI;
-                } else if (animationTime < 2.5) {
-                    // Phase 3: Victory pose
-                    const t = (animationTime - 1.5);
-                    const easeOut = 1 - Math.pow(1 - t, 3);
-                    rightArm.rotation.x = -2.2 + easeOut * 2.8;
-                    leftArm.rotation.x = -2.2 + easeOut * 2.8;
-                    rightArm.rotation.z = -1.7 + easeOut * 2.2;
-                    leftArm.rotation.z = 1.7 - easeOut * 2.2;
-                    rightArm.rotation.y = 0.8 + Math.PI - easeOut * (0.8 + Math.PI);
-                    leftArm.rotation.y = -0.8 - Math.PI + easeOut * (0.8 + Math.PI);
-                } else if (animationTime < 3.0) {
-                    // Phase 4: Return to idle
-                    const t = (animationTime - 2.5) * 2;
-                    const easeIn = 1 - Math.pow(1 - t, 2);
-                    rightArm.rotation.x = 0.6 - easeIn * 0.3;
-                    leftArm.rotation.x = 0.6 - easeIn * 0.3;
-                    rightArm.rotation.z = 0.5 - easeIn * 0.7;
-                    leftArm.rotation.z = -0.5 + easeIn * 0.7;
+                // Inspection animation - bring arms to center and rotate
+                if (inspectTime < 0.5) {
+                    // Bring to center
+                    const t = inspectTime * 2;
+                    rightArm.position.x = 0.4 - t * 0.3;
+                    leftArm.position.x = -0.4 + t * 0.3;
+                    rightArm.position.z = -0.6 + t * 0.2;
+                    leftArm.position.z = -0.6 + t * 0.2;
+                    rightArm.rotation.y = t * 0.5;
+                    leftArm.rotation.y = -t * 0.5;
+                } else if (inspectTime < 1.5) {
+                    // Rotate and flip
+                    const t = (inspectTime - 0.5);
+                    armsGroup.rotation.y = Math.sin(t * Math.PI * 2) * 0.3;
+                    armsGroup.rotation.x = Math.cos(t * Math.PI * 2) * 0.2;
+                    armsGroup.position.y = Math.sin(t * Math.PI * 4) * 0.05;
+                } else if (inspectTime < 2.0) {
+                    // Return
+                    const t = (inspectTime - 1.5) * 2;
+                    rightArm.position.x = 0.1 + t * 0.3;
+                    leftArm.position.x = -0.1 - t * 0.3;
+                    rightArm.position.z = -0.4 - t * 0.2;
+                    leftArm.position.z = -0.4 - t * 0.2;
+                    rightArm.rotation.y = 0.5 - t * 0.5;
+                    leftArm.rotation.y = -0.5 + t * 0.5;
+                    armsGroup.rotation.y *= 0.8;
+                    armsGroup.rotation.x *= 0.8;
+                    armsGroup.position.y *= 0.8;
+                } else {
+                    // Reset
+                    isInspecting = false;
+                    inspectTime = 0;
+                    rightArm.position.set(0.4, -0.3, -0.6);
+                    leftArm.position.set(-0.4, -0.3, -0.6);
                     rightArm.rotation.y = 0;
                     leftArm.rotation.y = 0;
-                } else {
-                    // Animation complete
-                    isAnimating = false;
-                    animationTime = 0;
+                    armsGroup.rotation.set(0, 0, 0);
+                    armsGroup.position.y = 0;
                 }
+            } else if (isMoving && !isInspecting) {
+                // Walking animation
+                const walkTime = Date.now() * 0.01;
+                const bob = Math.sin(walkTime) * 0.05;
+                const sway = Math.sin(walkTime * 0.5) * 0.03;
                 
-                // Add cool camera shake during animation
-                if (animationTime > 0.5 && animationTime < 2.0) {
-                    camera.position.x += (Math.random() - 0.5) * 0.01;
-                    camera.position.y += (Math.random() - 0.5) * 0.01;
-                }
+                armsGroup.position.y = bob;
+                armsGroup.rotation.z = sway;
                 
-            } else if (isMoving) {
-                const swingSpeed = isRunning ? 0.25 : 0.15;
-                armSwing += swingSpeed;
-                
-                const swingAmount = Math.sin(armSwing) * (isRunning ? 0.15 : 0.1);
-                rightArm.rotation.x = 0.3 + swingAmount;
-                leftArm.rotation.x = 0.3 - swingAmount;
-                
-                rightArm.rotation.z = -0.2 + Math.sin(armSwing) * 0.05;
-                leftArm.rotation.z = 0.2 - Math.sin(armSwing) * 0.05;
-                rightArm.rotation.y = 0;
-                leftArm.rotation.y = 0;
-            } else {
-                armSwing = 0;
-                rightArm.rotation.x += (0.3 - rightArm.rotation.x) * 0.1;
-                leftArm.rotation.x += (0.3 - leftArm.rotation.x) * 0.1;
-                rightArm.rotation.z += (-0.2 - rightArm.rotation.z) * 0.1;
-                leftArm.rotation.z += (0.2 - leftArm.rotation.z) * 0.1;
-                rightArm.rotation.y *= 0.9;
-                leftArm.rotation.y *= 0.9;
+                rightArm.rotation.x = Math.sin(walkTime) * 0.3;
+                leftArm.rotation.x = -Math.sin(walkTime) * 0.3;
+            } else if (!isInspecting) {
+                // Idle breathing
+                const breathe = Math.sin(Date.now() * 0.001) * 0.01;
+                armsGroup.position.y = breathe;
+                armsGroup.rotation.z *= 0.9;
+                rightArm.rotation.x *= 0.9;
+                leftArm.rotation.x *= 0.9;
             }
-            
-            // Breathing animation
-            const breathe = Math.sin(Date.now() * 0.002) * 0.008;
-            armGroup.position.y = breathe;
-            
-            // Update shader uniforms
-            const time = Date.now() * 0.001;
-            skyMaterial.uniforms.time.value = time;
-            particleMaterial.uniforms.time.value = time;
-            
-            // Animate particles gently
-            const particlePositions = particles.geometry.attributes.position.array;
-            for (let i = 0; i < particlePositions.length; i += 3) {
-                particlePositions[i] += Math.sin(time + i) * 0.02;
-                particlePositions[i + 1] += Math.cos(time + i * 0.5) * 0.01;
-                particlePositions[i + 2] += Math.sin(time + i * 0.3) * 0.02;
-                
-                // Wrap around
-                if (particlePositions[i] > 150) particlePositions[i] = -150;
-                if (particlePositions[i] < -150) particlePositions[i] = 150;
-                if (particlePositions[i + 1] > 120) particlePositions[i + 1] = 10;
-                if (particlePositions[i + 2] > 150) particlePositions[i + 2] = -150;
-                if (particlePositions[i + 2] < -150) particlePositions[i + 2] = 150;
-            }
-            particles.geometry.attributes.position.needsUpdate = true;
-            
+
             // Update HUD
-            const speed = moveVector.length() * 60;
-            document.getElementById('position').textContent = 
-                `X: ${camera.position.x.toFixed(1)} | Y: ${camera.position.y.toFixed(1)} | Z: ${camera.position.z.toFixed(1)}`;
-            document.getElementById('rotation').textContent = 
-                `${(rotationY * 180 / Math.PI).toFixed(0)}°`;
-            document.getElementById('speed').textContent = 
-                `${speed.toFixed(1)} m/s`;
-            
-            // Update minimap
-            updateMinimap();
-            
+            const speedValue = Math.sqrt(moveDirection.x ** 2 + moveDirection.z ** 2) * 60;
+            document.getElementById('posDisplay').textContent = 
+                `${Math.round(camera.position.x)}, ${Math.round(camera.position.y)}, ${Math.round(camera.position.z)}`;
+            document.getElementById('speedDisplay').textContent = speedValue.toFixed(1);
+
             renderer.render(scene, camera);
         }
 
-        // Handle resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // Pointer lock
-        canvas.addEventListener('click', () => {
-            canvas.requestPointerLock();
         });
 
         animate();
