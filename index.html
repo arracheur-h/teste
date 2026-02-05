@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue Première Personne - Roblox Style</title>
+    <title>Roblox FPS - Vue 3D Immersive</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap');
 
         * {
             margin: 0;
@@ -16,21 +16,28 @@
         body {
             font-family: 'Rajdhani', sans-serif;
             overflow: hidden;
-            cursor: crosshair;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            cursor: none;
+            background: #000;
         }
 
         #gameCanvas {
             display: block;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(to bottom, 
-                #87CEEB 0%, 
-                #B0E0E6 40%, 
-                #98D8C8 60%, 
-                #7EC850 100%
-            );
-            position: relative;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
         /* HUD Elements */
@@ -41,7 +48,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 1000;
         }
 
         .crosshair {
@@ -49,32 +56,58 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
         }
 
-        .crosshair::before,
-        .crosshair::after {
-            content: '';
+        .crosshair-center {
             position: absolute;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .crosshair::before {
-            width: 20px;
-            height: 2px;
             top: 50%;
             left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #00ff00;
+            border-radius: 50%;
             transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #00ff00;
         }
 
-        .crosshair::after {
+        .crosshair-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .crosshair-top {
             width: 2px;
-            height: 20px;
-            top: 50%;
+            height: 12px;
+            top: 0;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
+        }
+
+        .crosshair-bottom {
+            width: 2px;
+            height: 12px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .crosshair-left {
+            width: 12px;
+            height: 2px;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .crosshair-right {
+            width: 12px;
+            height: 2px;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .stats {
@@ -83,29 +116,65 @@
             left: 20px;
             color: white;
             font-family: 'Orbitron', sans-serif;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .stats-panel {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 40, 0.8) 100%);
+            backdrop-filter: blur(15px);
+            padding: 20px 25px;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            margin-bottom: 15px;
+            animation: statsPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes statsPulse {
+            0%, 100% { border-color: rgba(0, 255, 255, 0.3); }
+            50% { border-color: rgba(0, 255, 255, 0.6); }
         }
 
         .stat-item {
-            font-size: 18px;
-            margin: 5px 0;
+            font-size: 16px;
+            margin: 8px 0;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .stat-label {
+            color: #00ffff;
+            font-weight: 600;
         }
 
         .stat-value {
-            color: #4ECDC4;
+            color: #ffff00;
             font-weight: 700;
+            font-size: 18px;
+        }
+
+        .minimap {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid rgba(0, 255, 255, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .minimap-title {
+            text-align: center;
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            padding: 5px;
+            background: rgba(0, 255, 255, 0.2);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
         }
 
         /* Instructions */
@@ -114,338 +183,555 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 15px 30px;
-            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 40, 0.9) 100%);
+            backdrop-filter: blur(15px);
+            padding: 20px 40px;
+            border-radius: 20px;
             color: white;
             text-align: center;
             font-size: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
         .key {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 200, 255, 0.3));
+            padding: 8px 15px;
+            border-radius: 8px;
             margin: 0 5px;
-            font-weight: 600;
+            font-weight: 700;
             font-family: 'Orbitron', sans-serif;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
         }
 
-        /* Ground and Sky */
-        .ground {
-            position: absolute;
-            bottom: 0;
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 40%;
-            background: repeating-linear-gradient(
-                90deg,
-                #2ecc71 0px,
-                #2ecc71 50px,
-                #27ae60 50px,
-                #27ae60 100px
-            );
-            transform-origin: bottom;
-            perspective: 800px;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0f3460 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
         }
 
-        .ground::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent 0px,
-                transparent 49px,
-                rgba(0, 0, 0, 0.1) 49px,
-                rgba(0, 0, 0, 0.1) 50px
-            );
-            animation: groundMove 3s linear infinite;
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        @keyframes groundMove {
-            from { transform: translateY(0); }
-            to { transform: translateY(50px); }
+        .loading-text {
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            animation: loadingPulse 1.5s ease-in-out infinite;
         }
 
-        /* Clouds */
-        .cloud {
-            position: absolute;
-            background: white;
-            border-radius: 100px;
-            opacity: 0.8;
-            animation: cloudFloat 20s linear infinite;
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        .cloud::before,
-        .cloud::after {
-            content: '';
-            position: absolute;
-            background: white;
-            border-radius: 100px;
+        .loading-bar {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 255, 255, 0.3);
         }
 
-        .cloud1 {
-            width: 100px;
-            height: 40px;
-            top: 10%;
-            left: -100px;
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #00ff00);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
         }
 
-        .cloud1::before {
-            width: 50px;
-            height: 50px;
-            top: -25px;
-            left: 10px;
-        }
-
-        .cloud1::after {
-            width: 60px;
-            height: 35px;
-            top: -15px;
-            right: 10px;
-        }
-
-        .cloud2 {
-            width: 120px;
-            height: 45px;
-            top: 25%;
-            left: -150px;
-            animation-delay: -5s;
-            animation-duration: 25s;
-        }
-
-        .cloud2::before {
-            width: 60px;
-            height: 60px;
-            top: -30px;
-            left: 15px;
-        }
-
-        .cloud2::after {
-            width: 70px;
-            height: 40px;
-            top: -20px;
-            right: 15px;
-        }
-
-        @keyframes cloudFloat {
-            from { transform: translateX(0); }
-            to { transform: translateX(calc(100vw + 200px)); }
-        }
-
-        /* Particles */
-        .particle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: particleFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes particleFloat {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-            50% { opacity: 0.6; }
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+            z-index: 999;
         }
     </style>
 </head>
 <body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-text">ROBLOX FPS</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+    </div>
+
+    <div class="cursor" id="cursor"></div>
     <canvas id="gameCanvas"></canvas>
-    
-    <!-- Sky elements -->
-    <div class="cloud cloud1"></div>
-    <div class="cloud cloud2"></div>
-    
-    <!-- Ground -->
-    <div class="ground"></div>
+    <div class="vignette"></div>
     
     <!-- HUD -->
     <div class="hud">
-        <div class="crosshair"></div>
+        <div class="crosshair">
+            <div class="crosshair-center"></div>
+            <div class="crosshair-line crosshair-top"></div>
+            <div class="crosshair-line crosshair-bottom"></div>
+            <div class="crosshair-line crosshair-left"></div>
+            <div class="crosshair-line crosshair-right"></div>
+        </div>
         
         <div class="stats">
             <div class="stats-panel">
                 <div class="stat-item">
-                    <span>🎯 Position:</span>
-                    <span class="stat-value" id="position">X: 0 | Y: 0</span>
+                    <span class="stat-label">📍 POSITION:</span>
+                    <span class="stat-value" id="position">X: 0 | Y: 0 | Z: 0</span>
                 </div>
                 <div class="stat-item">
-                    <span>🔄 Rotation:</span>
+                    <span class="stat-label">🔄 ROTATION:</span>
                     <span class="stat-value" id="rotation">0°</span>
                 </div>
                 <div class="stat-item">
-                    <span>⚡ FPS:</span>
+                    <span class="stat-label">⚡ FPS:</span>
                     <span class="stat-value" id="fps">60</span>
                 </div>
+                <div class="stat-item">
+                    <span class="stat-label">💨 VITESSE:</span>
+                    <span class="stat-value" id="speed">0.0 m/s</span>
+                </div>
             </div>
+        </div>
+
+        <div class="minimap">
+            <div class="minimap-title">CARTE</div>
+            <canvas id="minimapCanvas" width="200" height="180"></canvas>
         </div>
         
         <div class="instructions">
             <span class="key">W A S D</span> Déplacer | 
             <span class="key">SOURIS</span> Regarder | 
+            <span class="key">SHIFT</span> Courir |
             <span class="key">ESPACE</span> Sauter
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Configuration
+        // Loading screen
+        let loadProgress = 0;
+        const loadingInterval = setInterval(() => {
+            loadProgress += Math.random() * 15;
+            if (loadProgress >= 100) {
+                loadProgress = 100;
+                clearInterval(loadingInterval);
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                }, 500);
+            }
+            document.getElementById('loadingProgress').style.width = loadProgress + '%';
+        }, 100);
+
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Scene setup
         const canvas = document.getElementById('gameCanvas');
         const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x87CEEB, 10, 100);
+        
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas, 
+            antialias: true,
+            powerPreference: "high-performance"
+        });
         
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-        // Camera position
-        camera.position.y = 1.6; // Eye level
-        camera.position.z = 0;
+        // Camera setup
+        camera.position.set(0, 1.7, 0);
+        
+        // Sky
+        const skyGeometry = new THREE.SphereGeometry(500, 32, 32);
+        const skyMaterial = new THREE.MeshBasicMaterial({
+            color: 0x87CEEB,
+            side: THREE.BackSide
+        });
+        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
+        scene.add(sky);
 
         // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(5, 10, 5);
-        directionalLight.castShadow = true;
-        scene.add(directionalLight);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+        sunLight.position.set(50, 100, 50);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 500;
+        sunLight.shadow.camera.left = -50;
+        sunLight.shadow.camera.right = 50;
+        sunLight.shadow.camera.top = 50;
+        sunLight.shadow.camera.bottom = -50;
+        scene.add(sunLight);
 
-        // Roblox R6 Style Arms
+        // Point lights for atmosphere
+        const pointLight1 = new THREE.PointLight(0x00ffff, 0.5, 20);
+        pointLight1.position.set(10, 5, 10);
+        scene.add(pointLight1);
+
+        const pointLight2 = new THREE.PointLight(0xff00ff, 0.5, 20);
+        pointLight2.position.set(-10, 5, -10);
+        scene.add(pointLight2);
+
+        // Ground
+        const groundGeometry = new THREE.PlaneGeometry(200, 200, 50, 50);
+        const groundMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x2ecc71,
+            roughness: 0.8,
+            metalness: 0.2
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Roblox R6 Arms - More detailed
         const armGroup = new THREE.Group();
         
-        // Right Arm
-        const rightArmGeometry = new THREE.BoxGeometry(0.15, 0.5, 0.15);
-        const armMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xFFC300,
-            flatShading: true,
-            shininess: 30
-        });
+        function createR6Arm(isRight) {
+            const armContainer = new THREE.Group();
+            
+            // Shoulder joint
+            const shoulderGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+            const jointMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xFFAA00,
+                flatShading: true,
+                shininess: 50
+            });
+            const shoulder = new THREE.Mesh(shoulderGeometry, jointMaterial);
+            armContainer.add(shoulder);
+            
+            // Upper arm
+            const upperArmGeometry = new THREE.BoxGeometry(0.18, 0.6, 0.18);
+            const armMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xFFC300,
+                flatShading: true,
+                shininess: 30
+            });
+            const upperArm = new THREE.Mesh(upperArmGeometry, armMaterial);
+            upperArm.position.y = -0.4;
+            upperArm.castShadow = true;
+            armContainer.add(upperArm);
+            
+            // Elbow joint
+            const elbowGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+            const elbow = new THREE.Mesh(elbowGeometry, jointMaterial);
+            elbow.position.y = -0.7;
+            armContainer.add(elbow);
+            
+            // Lower arm
+            const lowerArmGeometry = new THREE.BoxGeometry(0.18, 0.6, 0.18);
+            const lowerArm = new THREE.Mesh(lowerArmGeometry, armMaterial);
+            lowerArm.position.y = -1.1;
+            lowerArm.castShadow = true;
+            armContainer.add(lowerArm);
+            
+            // Wrist joint
+            const wristGeometry = new THREE.BoxGeometry(0.2, 0.15, 0.2);
+            const wrist = new THREE.Mesh(wristGeometry, jointMaterial);
+            wrist.position.y = -1.45;
+            armContainer.add(wrist);
+            
+            // Hand
+            const handGeometry = new THREE.BoxGeometry(0.22, 0.3, 0.22);
+            const handMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xFFD700,
+                flatShading: true,
+                shininess: 60
+            });
+            const hand = new THREE.Mesh(handGeometry, handMaterial);
+            hand.position.y = -1.7;
+            hand.castShadow = true;
+            armContainer.add(hand);
+            
+            // Fingers
+            for (let i = 0; i < 5; i++) {
+                const fingerGeometry = new THREE.BoxGeometry(0.05, 0.15, 0.05);
+                const finger = new THREE.Mesh(fingerGeometry, handMaterial);
+                finger.position.set(
+                    (i - 2) * 0.055 - 0.01,
+                    -1.85,
+                    0.08
+                );
+                finger.castShadow = true;
+                armContainer.add(finger);
+            }
+            
+            // Position arm
+            const side = isRight ? 1 : -1;
+            armContainer.position.set(0.4 * side, -0.2, -0.35);
+            armContainer.rotation.z = -0.2 * side;
+            armContainer.rotation.x = 0.3;
+            
+            // Store parts for animation
+            armContainer.userData = {
+                shoulder, upperArm, elbow, lowerArm, wrist, hand
+            };
+            
+            return armContainer;
+        }
         
-        const rightUpperArm = new THREE.Mesh(rightArmGeometry, armMaterial);
-        rightUpperArm.position.set(0.35, -0.3, -0.3);
-        rightUpperArm.rotation.z = -0.3;
-        rightUpperArm.castShadow = true;
+        const rightArm = createR6Arm(true);
+        const leftArm = createR6Arm(false);
         
-        const rightLowerArmGeometry = new THREE.BoxGeometry(0.15, 0.5, 0.15);
-        const rightLowerArm = new THREE.Mesh(rightLowerArmGeometry, armMaterial);
-        rightLowerArm.position.set(0.5, -0.7, -0.4);
-        rightLowerArm.rotation.z = -0.5;
-        rightLowerArm.rotation.x = 0.2;
-        rightLowerArm.castShadow = true;
-        
-        // Right Hand
-        const rightHandGeometry = new THREE.BoxGeometry(0.18, 0.18, 0.18);
-        const handMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xFFD700,
-            flatShading: true,
-            shininess: 50
-        });
-        const rightHand = new THREE.Mesh(rightHandGeometry, handMaterial);
-        rightHand.position.set(0.62, -1.0, -0.5);
-        rightHand.castShadow = true;
-        
-        // Left Arm
-        const leftUpperArm = new THREE.Mesh(rightArmGeometry, armMaterial);
-        leftUpperArm.position.set(-0.35, -0.3, -0.3);
-        leftUpperArm.rotation.z = 0.3;
-        leftUpperArm.castShadow = true;
-        
-        const leftLowerArm = new THREE.Mesh(rightLowerArmGeometry, armMaterial);
-        leftLowerArm.position.set(-0.5, -0.7, -0.4);
-        leftLowerArm.rotation.z = 0.5;
-        leftLowerArm.rotation.x = 0.2;
-        leftLowerArm.castShadow = true;
-        
-        const leftHand = new THREE.Mesh(rightHandGeometry, handMaterial);
-        leftHand.position.set(-0.62, -1.0, -0.5);
-        leftHand.castShadow = true;
-        
-        armGroup.add(rightUpperArm, rightLowerArm, rightHand);
-        armGroup.add(leftUpperArm, leftLowerArm, leftHand);
+        armGroup.add(rightArm, leftArm);
         camera.add(armGroup);
         scene.add(camera);
 
-        // Environment - Platforms
-        const platformMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0x95a5a6,
-            flatShading: true 
-        });
+        // Create 3D environment
+        const buildings = [];
+        const cubes = [];
         
-        for (let i = 0; i < 10; i++) {
-            const width = Math.random() * 3 + 2;
-            const depth = Math.random() * 3 + 2;
-            const platformGeometry = new THREE.BoxGeometry(width, 0.5, depth);
+        // Buildings
+        for (let i = 0; i < 20; i++) {
+            const width = Math.random() * 4 + 2;
+            const height = Math.random() * 15 + 5;
+            const depth = Math.random() * 4 + 2;
+            
+            const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+            const buildingMaterial = new THREE.MeshStandardMaterial({ 
+                color: Math.random() * 0xffffff,
+                flatShading: true,
+                roughness: 0.7,
+                metalness: 0.3
+            });
+            const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+            
+            building.position.set(
+                (Math.random() - 0.5) * 100,
+                height / 2,
+                (Math.random() - 0.5) * 100
+            );
+            building.castShadow = true;
+            building.receiveShadow = true;
+            
+            scene.add(building);
+            buildings.push(building);
+        }
+
+        // Floating platforms
+        for (let i = 0; i < 15; i++) {
+            const platformWidth = Math.random() * 5 + 3;
+            const platformDepth = Math.random() * 5 + 3;
+            const platformGeometry = new THREE.BoxGeometry(platformWidth, 0.5, platformDepth);
+            const platformMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0x95a5a6,
+                flatShading: true,
+                roughness: 0.8
+            });
             const platform = new THREE.Mesh(platformGeometry, platformMaterial);
             
-            platform.position.x = (Math.random() - 0.5) * 20;
-            platform.position.y = Math.random() * 3 - 2;
-            platform.position.z = (Math.random() - 0.5) * 20;
+            platform.position.set(
+                (Math.random() - 0.5) * 80,
+                Math.random() * 10 + 2,
+                (Math.random() - 0.5) * 80
+            );
             platform.castShadow = true;
             platform.receiveShadow = true;
             
             scene.add(platform);
         }
 
-        // Decorative Cubes
-        const cubeColors = [0xe74c3c, 0x3498db, 0x2ecc71, 0xf39c12, 0x9b59b6];
+        // Decorative cubes
+        const cubeColors = [0xe74c3c, 0x3498db, 0x2ecc71, 0xf39c12, 0x9b59b6, 0xe67e22];
         
-        for (let i = 0; i < 15; i++) {
-            const size = Math.random() * 0.5 + 0.3;
+        for (let i = 0; i < 30; i++) {
+            const size = Math.random() * 1.5 + 0.5;
             const cubeGeometry = new THREE.BoxGeometry(size, size, size);
             const cubeMaterial = new THREE.MeshPhongMaterial({ 
                 color: cubeColors[Math.floor(Math.random() * cubeColors.length)],
                 flatShading: true,
-                shininess: 80
+                shininess: 100,
+                emissive: cubeColors[Math.floor(Math.random() * cubeColors.length)],
+                emissiveIntensity: 0.2
             });
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
             
-            cube.position.x = (Math.random() - 0.5) * 15;
-            cube.position.y = Math.random() * 2;
-            cube.position.z = (Math.random() - 0.5) * 15;
+            cube.position.set(
+                (Math.random() - 0.5) * 60,
+                Math.random() * 8 + 1,
+                (Math.random() - 0.5) * 60
+            );
             cube.rotation.set(
                 Math.random() * Math.PI,
                 Math.random() * Math.PI,
                 Math.random() * Math.PI
             );
             cube.castShadow = true;
+            cube.userData.rotationSpeed = {
+                x: (Math.random() - 0.5) * 0.02,
+                y: (Math.random() - 0.5) * 0.02,
+                z: (Math.random() - 0.5) * 0.02
+            };
             
             scene.add(cube);
+            cubes.push(cube);
         }
 
-        // Player Movement
-        const moveSpeed = 0.1;
+        // Particles
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleCount = 500;
+        const positions = new Float32Array(particleCount * 3);
+        
+        for (let i = 0; i < particleCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 200;
+        }
+        
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.6
+        });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+
+        // Player controls
+        const moveSpeed = 0.15;
+        const runMultiplier = 2;
         const keys = {};
         let mouseX = 0, mouseY = 0;
         let rotationY = 0, rotationX = 0;
+        let velocity = new THREE.Vector3();
+        let isJumping = false;
+        let verticalVelocity = 0;
+        const gravity = -0.02;
+        const jumpForce = 0.4;
         
-        // Arm animation variables
+        // Arm animation
         let armSwing = 0;
         let isMoving = false;
+        let isRunning = false;
 
-        document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
-        document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        document.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            if (e.key === ' ' && !isJumping) {
+                isJumping = true;
+                verticalVelocity = jumpForce;
+            }
         });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+        });
+        
+        let lastMouseX = 0, lastMouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            const deltaX = e.clientX - lastMouseX;
+            const deltaY = e.clientY - lastMouseY;
+            
+            rotationY -= deltaX * 0.002;
+            rotationX -= deltaY * 0.002;
+            rotationX = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, rotationX));
+            
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
+
+        // Minimap
+        const minimapCanvas = document.getElementById('minimapCanvas');
+        const minimapCtx = minimapCanvas.getContext('2d');
+        
+        function updateMinimap() {
+            minimapCtx.fillStyle = 'rgba(0, 20, 40, 0.9)';
+            minimapCtx.fillRect(0, 0, 200, 180);
+            
+            // Grid
+            minimapCtx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
+            minimapCtx.lineWidth = 1;
+            for (let i = 0; i <= 200; i += 20) {
+                minimapCtx.beginPath();
+                minimapCtx.moveTo(i, 0);
+                minimapCtx.lineTo(i, 180);
+                minimapCtx.stroke();
+                
+                minimapCtx.beginPath();
+                minimapCtx.moveTo(0, i);
+                minimapCtx.lineTo(200, i);
+                minimapCtx.stroke();
+            }
+            
+            // Player position (center of minimap)
+            const centerX = 100;
+            const centerY = 90;
+            
+            // Draw nearby objects
+            [...buildings, ...cubes].forEach(obj => {
+                const dx = obj.position.x - camera.position.x;
+                const dz = obj.position.z - camera.position.z;
+                
+                if (Math.abs(dx) < 30 && Math.abs(dz) < 30) {
+                    const mapX = centerX + dx * 3;
+                    const mapY = centerY + dz * 3;
+                    
+                    minimapCtx.fillStyle = 'rgba(255, 255, 0, 0.6)';
+                    minimapCtx.fillRect(mapX - 2, mapY - 2, 4, 4);
+                }
+            });
+            
+            // Player marker
+            minimapCtx.save();
+            minimapCtx.translate(centerX, centerY);
+            minimapCtx.rotate(-rotationY);
+            
+            minimapCtx.fillStyle = '#00ff00';
+            minimapCtx.beginPath();
+            minimapCtx.moveTo(0, -8);
+            minimapCtx.lineTo(-5, 5);
+            minimapCtx.lineTo(5, 5);
+            minimapCtx.closePath();
+            minimapCtx.fill();
+            
+            minimapCtx.strokeStyle = '#ffffff';
+            minimapCtx.lineWidth = 2;
+            minimapCtx.stroke();
+            
+            minimapCtx.restore();
+        }
 
         // FPS Counter
         let lastTime = performance.now();
         let frames = 0;
         let fps = 60;
 
-        // Animation
+        // Animation loop
         function animate() {
             requestAnimationFrame(animate);
             
-            // FPS calculation
+            // FPS
             frames++;
             const currentTime = performance.now();
             if (currentTime >= lastTime + 1000) {
@@ -457,84 +743,119 @@
             
             // Movement
             isMoving = false;
+            isRunning = keys['shift'];
+            const currentSpeed = moveSpeed * (isRunning ? runMultiplier : 1);
             const moveVector = new THREE.Vector3();
             
             if (keys['z'] || keys['w']) {
-                moveVector.z -= moveSpeed;
+                moveVector.z -= currentSpeed;
                 isMoving = true;
             }
             if (keys['s']) {
-                moveVector.z += moveSpeed;
+                moveVector.z += currentSpeed;
                 isMoving = true;
             }
             if (keys['q'] || keys['a']) {
-                moveVector.x -= moveSpeed;
+                moveVector.x -= currentSpeed;
                 isMoving = true;
             }
             if (keys['d']) {
-                moveVector.x += moveSpeed;
+                moveVector.x += currentSpeed;
                 isMoving = true;
             }
             
             // Apply rotation to movement
-            moveVector.applyEuler(camera.rotation);
+            moveVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotationY);
             camera.position.add(moveVector);
             
-            // Mouse look
-            rotationY = mouseX * Math.PI;
-            rotationX = mouseY * Math.PI / 4;
-            camera.rotation.y = rotationY;
-            camera.rotation.x = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, rotationX));
-            
-            // Arm animation (walking swing)
-            if (isMoving) {
-                armSwing += 0.15;
+            // Jumping and gravity
+            if (isJumping) {
+                verticalVelocity += gravity;
+                camera.position.y += verticalVelocity;
                 
-                const swingAmount = Math.sin(armSwing) * 0.1;
-                rightUpperArm.rotation.x = swingAmount;
-                leftUpperArm.rotation.x = -swingAmount;
-                
-                rightLowerArm.rotation.x = 0.2 + Math.sin(armSwing) * 0.05;
-                leftLowerArm.rotation.x = 0.2 - Math.sin(armSwing) * 0.05;
-            } else {
-                // Return to idle position
-                armSwing = 0;
-                rightUpperArm.rotation.x *= 0.9;
-                leftUpperArm.rotation.x *= 0.9;
+                if (camera.position.y <= 1.7) {
+                    camera.position.y = 1.7;
+                    isJumping = false;
+                    verticalVelocity = 0;
+                }
             }
             
-            // Subtle idle breathing animation
-            const breathe = Math.sin(Date.now() * 0.001) * 0.01;
+            // Camera rotation
+            camera.rotation.y = rotationY;
+            camera.rotation.x = rotationX;
+            
+            // Arm animations
+            if (isMoving) {
+                const swingSpeed = isRunning ? 0.25 : 0.15;
+                armSwing += swingSpeed;
+                
+                const swingAmount = Math.sin(armSwing) * (isRunning ? 0.15 : 0.1);
+                rightArm.rotation.x = 0.3 + swingAmount;
+                leftArm.rotation.x = 0.3 - swingAmount;
+                
+                rightArm.rotation.z = -0.2 + Math.sin(armSwing) * 0.05;
+                leftArm.rotation.z = 0.2 - Math.sin(armSwing) * 0.05;
+            } else {
+                armSwing = 0;
+                rightArm.rotation.x += (0.3 - rightArm.rotation.x) * 0.1;
+                leftArm.rotation.x += (0.3 - leftArm.rotation.x) * 0.1;
+                rightArm.rotation.z += (-0.2 - rightArm.rotation.z) * 0.1;
+                leftArm.rotation.z += (0.2 - leftArm.rotation.z) * 0.1;
+            }
+            
+            // Breathing animation
+            const breathe = Math.sin(Date.now() * 0.002) * 0.008;
             armGroup.position.y = breathe;
             
+            // Rotate cubes
+            cubes.forEach(cube => {
+                cube.rotation.x += cube.userData.rotationSpeed.x;
+                cube.rotation.y += cube.userData.rotationSpeed.y;
+                cube.rotation.z += cube.userData.rotationSpeed.z;
+            });
+            
+            // Animate particles
+            const particlePositions = particles.geometry.attributes.position.array;
+            for (let i = 1; i < particlePositions.length; i += 3) {
+                particlePositions[i] += 0.05;
+                if (particlePositions[i] > 100) {
+                    particlePositions[i] = -100;
+                }
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            
+            // Animate lights
+            pointLight1.position.x = Math.sin(Date.now() * 0.001) * 15;
+            pointLight1.position.z = Math.cos(Date.now() * 0.001) * 15;
+            pointLight2.position.x = Math.cos(Date.now() * 0.0015) * 15;
+            pointLight2.position.z = Math.sin(Date.now() * 0.0015) * 15;
+            
             // Update HUD
+            const speed = moveVector.length() * 60;
             document.getElementById('position').textContent = 
-                `X: ${camera.position.x.toFixed(1)} | Z: ${camera.position.z.toFixed(1)}`;
+                `X: ${camera.position.x.toFixed(1)} | Y: ${camera.position.y.toFixed(1)} | Z: ${camera.position.z.toFixed(1)}`;
             document.getElementById('rotation').textContent = 
                 `${(rotationY * 180 / Math.PI).toFixed(0)}°`;
+            document.getElementById('speed').textContent = 
+                `${speed.toFixed(1)} m/s`;
+            
+            // Update minimap
+            updateMinimap();
             
             renderer.render(scene, camera);
         }
 
-        // Handle window resize
+        // Handle resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Add particles effect
-        for (let i = 0; i < 10; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.width = Math.random() * 3 + 2 + 'px';
-            particle.style.height = particle.style.width;
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 4 + 's';
-            particle.style.animationDuration = Math.random() * 3 + 3 + 's';
-            document.querySelector('.hud').appendChild(particle);
-        }
+        // Pointer lock
+        canvas.addEventListener('click', () => {
+            canvas.requestPointerLock();
+        });
 
         animate();
     </script>
