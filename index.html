@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Première Personne - Roblox Style</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+            cursor: crosshair;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, 
+                #87CEEB 0%, 
+                #B0E0E6 40%, 
+                #98D8C8 60%, 
+                #7EC850 100%
+            );
+            position: relative;
+        }
+
+        /* HUD Elements */
+        .hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+        }
+
+        .crosshair::before,
+        .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .crosshair::before {
+            width: 20px;
+            height: 2px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .crosshair::after {
+            width: 2px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .stats {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .stats-panel {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            font-size: 18px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-value {
+            color: #4ECDC4;
+            font-weight: 700;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .key {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 0 5px;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* Ground and Sky */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: repeating-linear-gradient(
+                90deg,
+                #2ecc71 0px,
+                #2ecc71 50px,
+                #27ae60 50px,
+                #27ae60 100px
+            );
+            transform-origin: bottom;
+            perspective: 800px;
+        }
+
+        .ground::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 49px,
+                rgba(0, 0, 0, 0.1) 49px,
+                rgba(0, 0, 0, 0.1) 50px
+            );
+            animation: groundMove 3s linear infinite;
+        }
+
+        @keyframes groundMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(50px); }
+        }
+
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+            opacity: 0.8;
+            animation: cloudFloat 20s linear infinite;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: white;
+            border-radius: 100px;
+        }
+
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 10%;
+            left: -100px;
+        }
+
+        .cloud1::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud1::after {
+            width: 60px;
+            height: 35px;
+            top: -15px;
+            right: 10px;
+        }
+
+        .cloud2 {
+            width: 120px;
+            height: 45px;
+            top: 25%;
+            left: -150px;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+
+        .cloud2::before {
+            width: 60px;
+            height: 60px;
+            top: -30px;
+            left: 15px;
+        }
+
+        .cloud2::after {
+            width: 70px;
+            height: 40px;
+            top: -20px;
+            right: 15px;
+        }
+
+        @keyframes cloudFloat {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        /* Particles */
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: particleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- Sky elements -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    
+    <!-- Ground -->
+    <div class="ground"></div>
+    
+    <!-- HUD -->
+    <div class="hud">
+        <div class="crosshair"></div>
+        
+        <div class="stats">
+            <div class="stats-panel">
+                <div class="stat-item">
+                    <span>🎯 Position:</span>
+                    <span class="stat-value" id="position">X: 0 | Y: 0</span>
+                </div>
+                <div class="stat-item">
+                    <span>🔄 Rotation:</span>
+                    <span class="stat-value" id="rotation">0°</span>
+                </div>
+                <div class="stat-item">
+                    <span>⚡ FPS:</span>
+                    <span class="stat-value" id="fps">60</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <span class="key">W A S D</span> Déplacer | 
+            <span class="key">SOURIS</span> Regarder | 
+            <span class="key">ESPACE</span> Sauter
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Configuration
+        const canvas = document.getElementById('gameCanvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // Camera position
+        camera.position.y = 1.6; // Eye level
+        camera.position.z = 0;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 10, 5);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+
+        // Roblox R6 Style Arms
+        const armGroup = new THREE.Group();
+        
+        // Right Arm
+        const rightArmGeometry = new THREE.BoxGeometry(0.15, 0.5, 0.15);
+        const armMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xFFC300,
+            flatShading: true,
+            shininess: 30
+        });
+        
+        const rightUpperArm = new THREE.Mesh(rightArmGeometry, armMaterial);
+        rightUpperArm.position.set(0.35, -0.3, -0.3);
+        rightUpperArm.rotation.z = -0.3;
+        rightUpperArm.castShadow = true;
+        
+        const rightLowerArmGeometry = new THREE.BoxGeometry(0.15, 0.5, 0.15);
+        const rightLowerArm = new THREE.Mesh(rightLowerArmGeometry, armMaterial);
+        rightLowerArm.position.set(0.5, -0.7, -0.4);
+        rightLowerArm.rotation.z = -0.5;
+        rightLowerArm.rotation.x = 0.2;
+        rightLowerArm.castShadow = true;
+        
+        // Right Hand
+        const rightHandGeometry = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+        const handMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xFFD700,
+            flatShading: true,
+            shininess: 50
+        });
+        const rightHand = new THREE.Mesh(rightHandGeometry, handMaterial);
+        rightHand.position.set(0.62, -1.0, -0.5);
+        rightHand.castShadow = true;
+        
+        // Left Arm
+        const leftUpperArm = new THREE.Mesh(rightArmGeometry, armMaterial);
+        leftUpperArm.position.set(-0.35, -0.3, -0.3);
+        leftUpperArm.rotation.z = 0.3;
+        leftUpperArm.castShadow = true;
+        
+        const leftLowerArm = new THREE.Mesh(rightLowerArmGeometry, armMaterial);
+        leftLowerArm.position.set(-0.5, -0.7, -0.4);
+        leftLowerArm.rotation.z = 0.5;
+        leftLowerArm.rotation.x = 0.2;
+        leftLowerArm.castShadow = true;
+        
+        const leftHand = new THREE.Mesh(rightHandGeometry, handMaterial);
+        leftHand.position.set(-0.62, -1.0, -0.5);
+        leftHand.castShadow = true;
+        
+        armGroup.add(rightUpperArm, rightLowerArm, rightHand);
+        armGroup.add(leftUpperArm, leftLowerArm, leftHand);
+        camera.add(armGroup);
+        scene.add(camera);
+
+        // Environment - Platforms
+        const platformMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x95a5a6,
+            flatShading: true 
+        });
+        
+        for (let i = 0; i < 10; i++) {
+            const width = Math.random() * 3 + 2;
+            const depth = Math.random() * 3 + 2;
+            const platformGeometry = new THREE.BoxGeometry(width, 0.5, depth);
+            const platform = new THREE.Mesh(platformGeometry, platformMaterial);
+            
+            platform.position.x = (Math.random() - 0.5) * 20;
+            platform.position.y = Math.random() * 3 - 2;
+            platform.position.z = (Math.random() - 0.5) * 20;
+            platform.castShadow = true;
+            platform.receiveShadow = true;
+            
+            scene.add(platform);
+        }
+
+        // Decorative Cubes
+        const cubeColors = [0xe74c3c, 0x3498db, 0x2ecc71, 0xf39c12, 0x9b59b6];
+        
+        for (let i = 0; i < 15; i++) {
+            const size = Math.random() * 0.5 + 0.3;
+            const cubeGeometry = new THREE.BoxGeometry(size, size, size);
+            const cubeMaterial = new THREE.MeshPhongMaterial({ 
+                color: cubeColors[Math.floor(Math.random() * cubeColors.length)],
+                flatShading: true,
+                shininess: 80
+            });
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            
+            cube.position.x = (Math.random() - 0.5) * 15;
+            cube.position.y = Math.random() * 2;
+            cube.position.z = (Math.random() - 0.5) * 15;
+            cube.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+            cube.castShadow = true;
+            
+            scene.add(cube);
+        }
+
+        // Player Movement
+        const moveSpeed = 0.1;
+        const keys = {};
+        let mouseX = 0, mouseY = 0;
+        let rotationY = 0, rotationX = 0;
+        
+        // Arm animation variables
+        let armSwing = 0;
+        let isMoving = false;
+
+        document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
+        document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // FPS Counter
+        let lastTime = performance.now();
+        let frames = 0;
+        let fps = 60;
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // FPS calculation
+            frames++;
+            const currentTime = performance.now();
+            if (currentTime >= lastTime + 1000) {
+                fps = Math.round(frames * 1000 / (currentTime - lastTime));
+                document.getElementById('fps').textContent = fps;
+                frames = 0;
+                lastTime = currentTime;
+            }
+            
+            // Movement
+            isMoving = false;
+            const moveVector = new THREE.Vector3();
+            
+            if (keys['z'] || keys['w']) {
+                moveVector.z -= moveSpeed;
+                isMoving = true;
+            }
+            if (keys['s']) {
+                moveVector.z += moveSpeed;
+                isMoving = true;
+            }
+            if (keys['q'] || keys['a']) {
+                moveVector.x -= moveSpeed;
+                isMoving = true;
+            }
+            if (keys['d']) {
+                moveVector.x += moveSpeed;
+                isMoving = true;
+            }
+            
+            // Apply rotation to movement
+            moveVector.applyEuler(camera.rotation);
+            camera.position.add(moveVector);
+            
+            // Mouse look
+            rotationY = mouseX * Math.PI;
+            rotationX = mouseY * Math.PI / 4;
+            camera.rotation.y = rotationY;
+            camera.rotation.x = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, rotationX));
+            
+            // Arm animation (walking swing)
+            if (isMoving) {
+                armSwing += 0.15;
+                
+                const swingAmount = Math.sin(armSwing) * 0.1;
+                rightUpperArm.rotation.x = swingAmount;
+                leftUpperArm.rotation.x = -swingAmount;
+                
+                rightLowerArm.rotation.x = 0.2 + Math.sin(armSwing) * 0.05;
+                leftLowerArm.rotation.x = 0.2 - Math.sin(armSwing) * 0.05;
+            } else {
+                // Return to idle position
+                armSwing = 0;
+                rightUpperArm.rotation.x *= 0.9;
+                leftUpperArm.rotation.x *= 0.9;
+            }
+            
+            // Subtle idle breathing animation
+            const breathe = Math.sin(Date.now() * 0.001) * 0.01;
+            armGroup.position.y = breathe;
+            
+            // Update HUD
+            document.getElementById('position').textContent = 
+                `X: ${camera.position.x.toFixed(1)} | Z: ${camera.position.z.toFixed(1)}`;
+            document.getElementById('rotation').textContent = 
+                `${(rotationY * 180 / Math.PI).toFixed(0)}°`;
+            
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Add particles effect
+        for (let i = 0; i < 10; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.width = Math.random() * 3 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 4 + 's';
+            particle.style.animationDuration = Math.random() * 3 + 3 + 's';
+            document.querySelector('.hud').appendChild(particle);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
