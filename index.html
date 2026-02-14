@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPS - Roblox Style</title>
+    <title>Lua Obfuscator - Interface Web</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Bebas+Neue&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -14,666 +12,488 @@
         }
 
         body {
-            font-family: 'Rajdhani', sans-serif;
-            overflow: hidden;
-            background: #000;
-        }
-
-        canvas {
-            display: block;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .hud {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 100;
-        }
-
-        .crosshair {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .crosshair-dot {
-            width: 4px;
-            height: 4px;
-            background: #00ff00;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .crosshair-line {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
-        }
-
-        .crosshair-top { width: 2px; height: 10px; top: -15px; left: 50%; transform: translateX(-50%); }
-        .crosshair-bottom { width: 2px; height: 10px; bottom: -15px; left: 50%; transform: translateX(-50%); }
-        .crosshair-left { width: 10px; height: 2px; left: -15px; top: 50%; transform: translateY(-50%); }
-        .crosshair-right { width: 10px; height: 2px; right: -15px; top: 50%; transform: translateY(-50%); }
-
-        .stats {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 30, 0.9));
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            border-radius: 10px;
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            color: #fff;
-            font-size: 16px;
-            min-width: 250px;
-            backdrop-filter: blur(10px);
         }
 
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
-        .stat-row:last-child {
-            border-bottom: none;
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
         }
 
-        .stat-label {
-            color: #00ff88;
-            font-weight: 700;
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
 
-        .stat-value {
-            color: #fff;
-            font-weight: 600;
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
         }
 
         .controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(10, 10, 30, 0.9));
-            padding: 15px 30px;
-            border-radius: 15px;
-            border: 2px solid rgba(0, 255, 136, 0.3);
-            backdrop-filter: blur(10px);
             display: flex;
             gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
             align-items: center;
         }
 
-        .key {
-            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 200, 100, 0.2));
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 2px solid rgba(0, 255, 136, 0.4);
-            color: #00ff88;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
-            font-family: 'Bebas Neue', sans-serif;
-            letter-spacing: 1px;
-        }
-
-        .separator {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 18px;
-        }
-
-        .start-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0a0a0a, #1a1a3e);
+        .control-group {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            z-index: 1000;
-            transition: opacity 0.5s;
+            gap: 10px;
         }
 
-        .start-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
+        .control-group label {
+            font-weight: 600;
+            color: #333;
         }
 
-        .start-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 72px;
-            color: #00ff88;
-            text-shadow: 0 0 20px rgba(0, 255, 136, 0.5), 0 0 40px rgba(0, 255, 136, 0.3);
-            margin-bottom: 40px;
-            letter-spacing: 4px;
-        }
-
-        .start-button {
-            padding: 20px 50px;
-            font-size: 24px;
-            font-family: 'Bebas Neue', sans-serif;
-            background: linear-gradient(135deg, #00ff88, #00cc6a);
-            border: none;
-            border-radius: 10px;
-            color: #000;
+        select, button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            font-size: 1em;
             cursor: pointer;
             transition: all 0.3s;
-            letter-spacing: 2px;
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
         }
 
-        .start-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
+        select {
+            background: white;
         }
 
-        .vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .editor-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-box h3 {
+            color: #333;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        textarea {
             width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
-            pointer-events: none;
-            z-index: 50;
+            height: 500px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .info-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="start-screen" id="startScreen">
-        <div class="start-title">ROBLOX FPS</div>
-        <button class="start-button" id="startButton">COMMENCER</button>
+    <div class="container">
+        <div class="header">
+            <h1>🔒 Lua Obfuscator</h1>
+            <p>Protégez votre code Lua en le rendant difficile à lire</p>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <h4>ℹ️ Comment utiliser :</h4>
+                <ul>
+                    <li>Collez votre code Lua dans l'éditeur de gauche</li>
+                    <li>Choisissez le niveau d'obfuscation désiré</li>
+                    <li>Cliquez sur "Obfusquer" pour générer le code protégé</li>
+                    <li>Copiez le résultat depuis l'éditeur de droite</li>
+                </ul>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="level">Niveau d'obfuscation :</label>
+                    <select id="level">
+                        <option value="light">Light (Basique)</option>
+                        <option value="medium" selected>Medium (Recommandé)</option>
+                        <option value="heavy">Heavy (Maximum)</option>
+                    </select>
+                </div>
+                <button onclick="obfuscate()">🔒 Obfusquer</button>
+                <button onclick="copyOutput()">📋 Copier le résultat</button>
+                <button onclick="clearAll()">🗑️ Effacer tout</button>
+                <button onclick="loadExample()">📝 Charger exemple</button>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <h3>📄 Code Original</h3>
+                    <textarea id="input" placeholder="Collez votre code Lua ici..."></textarea>
+                </div>
+                <div class="editor-box">
+                    <h3>🔐 Code Obfusqué</h3>
+                    <textarea id="output" placeholder="Le code obfusqué apparaîtra ici..." readonly></textarea>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Taille originale</div>
+                    <div class="stat-value" id="originalSize">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Taille obfusquée</div>
+                    <div class="stat-value" id="obfuscatedSize">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Différence</div>
+                    <div class="stat-value" id="difference">0%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Variables renommées</div>
+                    <div class="stat-value" id="varsRenamed">0</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <canvas id="canvas"></canvas>
-    <div class="vignette"></div>
-
-    <div class="hud">
-        <div class="crosshair">
-            <div class="crosshair-dot"></div>
-            <div class="crosshair-line crosshair-top"></div>
-            <div class="crosshair-line crosshair-bottom"></div>
-            <div class="crosshair-line crosshair-left"></div>
-            <div class="crosshair-line crosshair-right"></div>
-        </div>
-
-        <div class="stats">
-            <div class="stat-row">
-                <span class="stat-label">POS</span>
-                <span class="stat-value" id="posDisplay">0, 0, 0</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">FPS</span>
-                <span class="stat-value" id="fpsDisplay">60</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">VITESSE</span>
-                <span class="stat-value" id="speedDisplay">0.0</span>
-            </div>
-        </div>
-
-        <div class="controls">
-            <span class="key">WASD</span>
-            <span class="separator">•</span>
-            <span class="key">SHIFT</span>
-            <span class="separator">•</span>
-            <span class="key">ESPACE</span>
-            <span class="separator">•</span>
-            <span class="key">E</span>
-            <span style="color: #fff; font-size: 12px;">INSPECT</span>
-            <span class="separator">•</span>
-            <span class="key">R</span>
-            <span style="color: #fff; font-size: 12px;">EMOTE</span>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Start screen
-        const startScreen = document.getElementById('startScreen');
-        const startButton = document.getElementById('startButton');
-        const canvas = document.getElementById('canvas');
+        // Lua keywords and builtins to preserve
+        const keywords = new Set([
+            'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
+            'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
+            'return', 'then', 'true', 'until', 'while', 'goto'
+        ]);
 
-        let gameStarted = false;
+        const builtins = new Set([
+            'print', 'pairs', 'ipairs', 'tonumber', 'tostring', 'type',
+            'assert', 'error', 'pcall', 'xpcall', 'select', 'require',
+            'setmetatable', 'getmetatable', 'rawget', 'rawset', 'next',
+            'collectgarbage', 'dofile', 'loadfile', 'load', 'loadstring',
+            'math', 'string', 'table', 'io', 'os', 'debug', 'coroutine',
+            '_G', '_VERSION', 'min', 'max', 'insert', 'remove', 'char'
+        ]);
 
-        startButton.addEventListener('click', () => {
-            startScreen.classList.add('hidden');
-            gameStarted = true;
-            canvas.requestPointerLock();
-        });
+        let variableMap = {};
 
-        // Scene setup
-        const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x87CEEB, 80, 300);
-
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-        // Beautiful Sky Shader
-        const skyGeometry = new THREE.SphereGeometry(500, 64, 64);
-        const skyMaterial = new THREE.ShaderMaterial({
-            side: THREE.BackSide,
-            uniforms: {
-                time: { value: 0 },
-                sunPosition: { value: new THREE.Vector3(0.3, 0.5, 0.8) }
-            },
-            vertexShader: `
-                varying vec3 vWorldPosition;
-                varying vec3 vPosition;
-                void main() {
-                    vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-                    vWorldPosition = worldPosition.xyz;
-                    vPosition = position;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        function generateRandomName() {
+            const types = [
+                () => {
+                    const chars = 'lIO';
+                    let name = '';
+                    for (let i = 0; i < Math.floor(Math.random() * 3) + 3; i++) {
+                        name += chars[Math.floor(Math.random() * chars.length)];
+                    }
+                    return name;
+                },
+                () => {
+                    return '_' + Math.random().toString(36).substr(2, 3);
+                },
+                () => {
+                    const letter = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+                    return letter + Math.floor(Math.random() * 1000);
                 }
-            `,
-            fragmentShader: `
-                uniform float time;
-                uniform vec3 sunPosition;
-                varying vec3 vWorldPosition;
-                varying vec3 vPosition;
+            ];
+            return types[Math.floor(Math.random() * types.length)]();
+        }
+
+        function removeCommentsAndWhitespace(code) {
+            // Remove single-line comments
+            code = code.replace(/--[^\n]*/g, '');
+            // Remove multi-line comments
+            code = code.replace(/--\[\[[\s\S]*?\]\]/g, '');
+            // Compress whitespace
+            code = code.replace(/[ \t]+/g, ' ');
+            // Remove empty lines
+            code = code.split('\n').filter(line => line.trim()).join('\n');
+            return code;
+        }
+
+        function obfuscateVariables(code) {
+            variableMap = {};
+            let count = 0;
+            
+            return code.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match) => {
+                if (keywords.has(match) || builtins.has(match)) {
+                    return match;
+                }
                 
-                void main() {
-                    vec3 direction = normalize(vPosition);
+                if (!variableMap[match]) {
+                    variableMap[match] = generateRandomName();
+                    count++;
+                }
+                
+                return variableMap[match];
+            });
+        }
+
+        function obfuscateStrings(code) {
+            return code.replace(/(['"])(?:(?=(\\?))\2.)*?\1/g, (match) => {
+                if (Math.random() < 0.5) {
+                    const quote = match[0];
+                    const content = match.slice(1, -1);
+                    const bytes = [];
                     
-                    // Sky gradient
-                    float elevation = direction.y;
-                    vec3 skyBlue = vec3(0.3, 0.5, 0.9);
-                    vec3 horizonColor = vec3(0.9, 0.6, 0.4);
-                    vec3 zenithColor = vec3(0.05, 0.1, 0.3);
-                    
-                    vec3 skyColor;
-                    if (elevation > 0.0) {
-                        skyColor = mix(skyBlue, zenithColor, pow(elevation, 0.5));
-                    } else {
-                        skyColor = mix(horizonColor, skyBlue, pow(1.0 + elevation, 0.8));
+                    for (let i = 0; i < content.length; i++) {
+                        bytes.push(content.charCodeAt(i));
                     }
                     
-                    // Sun
-                    float sunDist = distance(direction, sunPosition);
-                    float sun = 1.0 - smoothstep(0.0, 0.05, sunDist);
-                    float sunGlow = 1.0 - smoothstep(0.0, 0.3, sunDist);
-                    
-                    vec3 sunColor = vec3(1.0, 0.9, 0.7);
-                    skyColor += sun * sunColor * 2.0;
-                    skyColor += sunGlow * sunColor * 0.3;
-                    
-                    // Stars (visible in dark areas)
-                    float stars = 0.0;
-                    vec3 starPos = direction * 50.0;
-                    float starPattern = sin(starPos.x * 200.0) * sin(starPos.y * 200.0) * sin(starPos.z * 200.0);
-                    stars = smoothstep(0.995, 1.0, starPattern) * (1.0 - elevation);
-                    skyColor += stars * vec3(1.0) * 0.5;
-                    
-                    // Clouds
-                    float cloudPattern = sin(direction.x * 3.0 + time * 0.05) * 
-                                       cos(direction.z * 3.0 + time * 0.03) * 
-                                       sin(direction.y * 5.0);
-                    float clouds = smoothstep(0.3, 0.7, cloudPattern) * 0.3;
-                    skyColor = mix(skyColor, vec3(1.0), clouds * (elevation + 0.5));
-                    
-                    gl_FragColor = vec4(skyColor, 1.0);
+                    return `string.char(${bytes.join(',')})`;
                 }
-            `
-        });
-        const sky = new THREE.Mesh(skyGeometry, skyMaterial);
-        scene.add(sky);
-
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
-
-        const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        sunLight.position.set(100, 200, 100);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.camera.left = -100;
-        sunLight.shadow.camera.right = 100;
-        sunLight.shadow.camera.top = 100;
-        sunLight.shadow.camera.bottom = -100;
-        scene.add(sunLight);
-
-        // Ground with better material
-        const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-        const groundMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                time: { value: 0 }
-            },
-            vertexShader: `
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform float time;
-                varying vec2 vUv;
-                
-                void main() {
-                    vec2 pos = vUv * 100.0;
-                    
-                    // Grid pattern
-                    vec2 grid = abs(fract(pos - 0.5) - 0.5) / fwidth(pos);
-                    float line = min(grid.x, grid.y);
-                    float gridPattern = 1.0 - min(line, 1.0);
-                    
-                    // Base color
-                    vec3 baseColor = vec3(0.05, 0.05, 0.05);
-                    vec3 gridColor = vec3(0.0, 1.0, 0.5);
-                    
-                    // Pulsing effect
-                    float pulse = sin(time * 2.0 + length(pos) * 0.1) * 0.5 + 0.5;
-                    
-                    vec3 finalColor = mix(baseColor, gridColor, gridPattern * 0.3 * (0.5 + pulse * 0.5));
-                    
-                    gl_FragColor = vec4(finalColor, 1.0);
-                }
-            `
-        });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        scene.add(ground);
-
-        // Create R6 Arms
-        function createArm(isRight) {
-            const armGroup = new THREE.Group();
-            
-            // Upper arm
-            const upperArmGeo = new THREE.BoxGeometry(0.2, 0.6, 0.2);
-            const armMat = new THREE.MeshStandardMaterial({
-                color: 0xFFCC00,
-                flatShading: true,
-                roughness: 0.7
+                return match;
             });
-            const upperArm = new THREE.Mesh(upperArmGeo, armMat);
-            upperArm.castShadow = true;
-            armGroup.add(upperArm);
-
-            // Lower arm
-            const lowerArmGeo = new THREE.BoxGeometry(0.2, 0.6, 0.2);
-            const lowerArm = new THREE.Mesh(lowerArmGeo, armMat);
-            lowerArm.position.y = -0.6;
-            lowerArm.castShadow = true;
-            armGroup.add(lowerArm);
-
-            // Hand
-            const handGeo = new THREE.BoxGeometry(0.25, 0.25, 0.25);
-            const handMat = new THREE.MeshStandardMaterial({
-                color: 0xFFDD44,
-                flatShading: true,
-                roughness: 0.6
-            });
-            const hand = new THREE.Mesh(handGeo, handMat);
-            hand.position.y = -0.95;
-            hand.castShadow = true;
-            armGroup.add(hand);
-
-            armGroup.userData = { upperArm, lowerArm, hand };
-            return armGroup;
         }
 
-        const rightArm = createArm(true);
-        rightArm.position.set(0.4, -0.3, -0.6);
-        rightArm.rotation.z = -0.3;
-
-        const leftArm = createArm(false);
-        leftArm.position.set(-0.4, -0.3, -0.6);
-        leftArm.rotation.z = 0.3;
-
-        const armsGroup = new THREE.Group();
-        armsGroup.add(rightArm, leftArm);
-        camera.add(armsGroup);
-        scene.add(camera);
-
-        camera.position.set(0, 1.7, 0);
-
-        // Player movement
-        const keys = {};
-        let moveSpeed = 0.15;
-        let velocity = new THREE.Vector3();
-        let canJump = false;
-        let rotationX = 0;
-        let rotationY = 0;
-
-        // Animation state
-        let isInspecting = false;
-        let inspectTime = 0;
-        let isEmoting = false;
-        let emoteTime = 0;
-
-        document.addEventListener('keydown', (e) => {
-            keys[e.key.toLowerCase()] = true;
-            
-            if (e.key === ' ' && canJump) {
-                velocity.y = 0.3;
-                canJump = false;
-            }
-
-            if (e.key.toLowerCase() === 'e' && !isInspecting && !isEmoting) {
-                isInspecting = true;
-                inspectTime = 0;
-            }
-
-            if (e.key.toLowerCase() === 'r' && !isEmoting && !isInspecting) {
-                isEmoting = true;
-                emoteTime = 0;
-            }
-        });
-
-        document.addEventListener('keyup', (e) => {
-            keys[e.key.toLowerCase()] = false;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (document.pointerLockElement === canvas && gameStarted) {
-                rotationY -= e.movementX * 0.002;
-                rotationX -= e.movementY * 0.002;
-                rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
-            }
-        });
-
-        canvas.addEventListener('click', () => {
-            if (gameStarted) {
-                canvas.requestPointerLock();
-            }
-        });
-
-        // Animation loop
-        let lastTime = performance.now();
-        let frameCount = 0;
-        let fps = 60;
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            if (!gameStarted) return;
-
-            // FPS counter
-            frameCount++;
-            const currentTime = performance.now();
-            if (currentTime >= lastTime + 1000) {
-                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-                document.getElementById('fpsDisplay').textContent = fps;
-                frameCount = 0;
-                lastTime = currentTime;
-            }
-
-            // Movement
-            const moveDirection = new THREE.Vector3();
-            const isMoving = keys['w'] || keys['a'] || keys['s'] || keys['d'] || keys['z'] || keys['q'];
-            const speed = keys['shift'] ? moveSpeed * 2 : moveSpeed;
-
-            if (keys['w'] || keys['z']) moveDirection.z -= speed;
-            if (keys['s']) moveDirection.z += speed;
-            if (keys['a'] || keys['q']) moveDirection.x -= speed;
-            if (keys['d']) moveDirection.x += speed;
-
-            moveDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotationY);
-            
-            camera.position.x += moveDirection.x;
-            camera.position.z += moveDirection.z;
-
-            // Gravity
-            velocity.y -= 0.015;
-            camera.position.y += velocity.y;
-
-            if (camera.position.y <= 1.7) {
-                camera.position.y = 1.7;
-                velocity.y = 0;
-                canJump = true;
-            }
-
-            // Camera rotation
-            camera.rotation.order = 'YXZ';
-            camera.rotation.y = rotationY;
-            camera.rotation.x = rotationX;
-
-            // Arm animations
-            if (isEmoting) {
-                emoteTime += 0.016;
+        function obfuscateNumbers(code) {
+            return code.replace(/\b\d+\.?\d*\b/g, (match) => {
+                const num = parseInt(match);
+                if (isNaN(num)) return match;
                 
-                // Dance/Wave emote animation
-                if (emoteTime < 0.3) {
-                    // Raise right arm
-                    const t = emoteTime / 0.3;
-                    rightArm.rotation.z = -0.3 - t * 1.8;
-                    rightArm.rotation.x = t * 0.5;
-                    rightArm.position.y = -0.3 + t * 0.2;
-                } else if (emoteTime < 1.5) {
-                    // Wave motion
-                    const t = (emoteTime - 0.3);
-                    const wave = Math.sin(t * Math.PI * 4);
-                    rightArm.rotation.z = -2.1 + wave * 0.4;
-                    rightArm.rotation.x = 0.5 + wave * 0.3;
-                    rightArm.userData.hand.rotation.z = wave * 0.5;
-                    
-                    // Left arm on hip
-                    leftArm.rotation.z = 0.3 + t * 0.3;
-                    leftArm.position.x = -0.4 - t * 0.1;
-                } else if (emoteTime < 2.0) {
-                    // Return to normal
-                    const t = (emoteTime - 1.5) * 2;
-                    rightArm.rotation.z = -2.1 + t * 1.8;
-                    rightArm.rotation.x = 0.5 - t * 0.5;
-                    rightArm.position.y = -0.1 - t * 0.2;
-                    rightArm.userData.hand.rotation.z *= 0.8;
-                    leftArm.rotation.z = 0.6 - t * 0.3;
-                    leftArm.position.x = -0.5 + t * 0.1;
-                } else {
-                    // Reset
-                    isEmoting = false;
-                    emoteTime = 0;
-                    rightArm.rotation.set(0, 0, -0.3);
-                    leftArm.rotation.set(0, 0, 0.3);
-                    rightArm.position.set(0.4, -0.3, -0.6);
-                    leftArm.position.set(-0.4, -0.3, -0.6);
-                    rightArm.userData.hand.rotation.z = 0;
+                const strategy = Math.floor(Math.random() * 3);
+                
+                if (strategy === 0 && num > 0) {
+                    return '0x' + num.toString(16);
+                } else if (strategy === 1 && num > 10) {
+                    const a = Math.floor(Math.random() * (num - 1)) + 1;
+                    const b = num - a;
+                    return `(${a}+${b})`;
                 }
-            } else if (isInspecting) {
-                inspectTime += 0.016;
                 
-                // Inspection animation - bring arms to center and rotate
-                if (inspectTime < 0.5) {
-                    // Bring to center
-                    const t = inspectTime * 2;
-                    rightArm.position.x = 0.4 - t * 0.3;
-                    leftArm.position.x = -0.4 + t * 0.3;
-                    rightArm.position.z = -0.6 + t * 0.2;
-                    leftArm.position.z = -0.6 + t * 0.2;
-                    rightArm.rotation.y = t * 0.5;
-                    leftArm.rotation.y = -t * 0.5;
-                } else if (inspectTime < 1.5) {
-                    // Rotate and flip
-                    const t = (inspectTime - 0.5);
-                    armsGroup.rotation.y = Math.sin(t * Math.PI * 2) * 0.3;
-                    armsGroup.rotation.x = Math.cos(t * Math.PI * 2) * 0.2;
-                    armsGroup.position.y = Math.sin(t * Math.PI * 4) * 0.05;
-                } else if (inspectTime < 2.0) {
-                    // Return
-                    const t = (inspectTime - 1.5) * 2;
-                    rightArm.position.x = 0.1 + t * 0.3;
-                    leftArm.position.x = -0.1 - t * 0.3;
-                    rightArm.position.z = -0.4 - t * 0.2;
-                    leftArm.position.z = -0.4 - t * 0.2;
-                    rightArm.rotation.y = 0.5 - t * 0.5;
-                    leftArm.rotation.y = -0.5 + t * 0.5;
-                    armsGroup.rotation.y *= 0.8;
-                    armsGroup.rotation.x *= 0.8;
-                    armsGroup.position.y *= 0.8;
-                } else {
-                    // Reset
-                    isInspecting = false;
-                    inspectTime = 0;
-                    rightArm.position.set(0.4, -0.3, -0.6);
-                    leftArm.position.set(-0.4, -0.3, -0.6);
-                    rightArm.rotation.y = 0;
-                    leftArm.rotation.y = 0;
-                    armsGroup.rotation.set(0, 0, 0);
-                    armsGroup.position.y = 0;
-                }
-            } else if (isMoving && !isInspecting && !isEmoting) {
-                // Walking animation
-                const walkTime = Date.now() * 0.01;
-                const bob = Math.sin(walkTime) * 0.05;
-                const sway = Math.sin(walkTime * 0.5) * 0.03;
-                
-                armsGroup.position.y = bob;
-                armsGroup.rotation.z = sway;
-                
-                rightArm.rotation.x = Math.sin(walkTime) * 0.3;
-                leftArm.rotation.x = -Math.sin(walkTime) * 0.3;
-            } else if (!isInspecting && !isEmoting) {
-                // Idle breathing
-                const breathe = Math.sin(Date.now() * 0.001) * 0.01;
-                armsGroup.position.y = breathe;
-                armsGroup.rotation.z *= 0.9;
-                rightArm.rotation.x *= 0.9;
-                leftArm.rotation.x *= 0.9;
-            }
-
-            // Update shader uniforms
-            const time = Date.now() * 0.001;
-            skyMaterial.uniforms.time.value = time;
-            groundMaterial.uniforms.time.value = time;
-
-            // Update HUD
-            const speedValue = Math.sqrt(moveDirection.x ** 2 + moveDirection.z ** 2) * 60;
-            document.getElementById('posDisplay').textContent = 
-                `${Math.round(camera.position.x)}, ${Math.round(camera.position.y)}, ${Math.round(camera.position.z)}`;
-            document.getElementById('speedDisplay').textContent = speedValue.toFixed(1);
-
-            renderer.render(scene, camera);
+                return match;
+            });
         }
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
+        function addJunkCode(code) {
+            const junkSnippets = [
+                'local _junk=nil;',
+                'local _temp=0;',
+                'if false then end;',
+                'local _=function()end;'
+            ];
+            
+            const lines = code.split('\n');
+            const newLines = [];
+            
+            for (let line of lines) {
+                newLines.push(line);
+                if (Math.random() < 0.1 && line.trim()) {
+                    newLines.push(junkSnippets[Math.floor(Math.random() * junkSnippets.length)]);
+                }
+            }
+            
+            return newLines.join('\n');
+        }
 
-        animate();
+        function obfuscate() {
+            const input = document.getElementById('input').value;
+            const level = document.getElementById('level').value;
+            
+            if (!input.trim()) {
+                alert('Veuillez entrer du code à obfusquer !');
+                return;
+            }
+
+            let code = input;
+            let varsRenamed = 0;
+
+            // Always remove comments and whitespace
+            code = removeCommentsAndWhitespace(code);
+
+            if (level === 'medium' || level === 'heavy') {
+                code = obfuscateVariables(code);
+                varsRenamed = Object.keys(variableMap).length;
+            }
+
+            if (level === 'heavy') {
+                code = obfuscateStrings(code);
+                code = obfuscateNumbers(code);
+                code = addJunkCode(code);
+            }
+
+            document.getElementById('output').value = code;
+            updateStats(input, code, varsRenamed);
+        }
+
+        function updateStats(original, obfuscated, varsRenamed) {
+            const originalSize = original.length;
+            const obfuscatedSize = obfuscated.length;
+            const diff = ((obfuscatedSize - originalSize) / originalSize * 100).toFixed(1);
+
+            document.getElementById('originalSize').textContent = originalSize + ' bytes';
+            document.getElementById('obfuscatedSize').textContent = obfuscatedSize + ' bytes';
+            document.getElementById('difference').textContent = (diff >= 0 ? '+' : '') + diff + '%';
+            document.getElementById('varsRenamed').textContent = varsRenamed;
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copié !';
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+            updateStats('', '', 0);
+        }
+
+        function loadExample() {
+            const example = `-- Player class example
+local Player = {}
+Player.__index = Player
+
+function Player:new(name, health)
+    local player = setmetatable({}, Player)
+    player.name = name
+    player.health = health or 100
+    player.score = 0
+    return player
+end
+
+function Player:takeDamage(amount)
+    self.health = self.health - amount
+    if self.health <= 0 then
+        self.health = 0
+        print(self.name .. " died!")
+        return true
+    end
+    return false
+end
+
+function Player:heal(amount)
+    self.health = math.min(self.health + amount, 100)
+    print(self.name .. " healed for " .. amount)
+end
+
+-- Create and use player
+local hero = Player:new("Hero", 100)
+hero:takeDamage(30)
+hero:heal(20)
+print("Final health: " .. hero.health)`;
+
+            document.getElementById('input').value = example;
+        }
+
+        // Load example on page load
+        window.onload = function() {
+            loadExample();
+        };
     </script>
 </body>
 </html>
