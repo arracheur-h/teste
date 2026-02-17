@@ -1,31 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+     <script data-cfasync="false" src="//d33f51dyacx7bd.cloudfront.net/?aydfd=1239876"></script>
+    <link rel="icon" type="image/webp" href="https://cdn.discordapp.com/emojis/1456943539165331519.webp?size=44">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LuaGuard - Professional Code Obfuscator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>3xt4sy - Keys</title>
+    
+    <!-- AdBlock Detection Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
     <style>
-        :root {
-            --primary: #0066FF;
-            --primary-dark: #0052CC;
-            --primary-light: #3385FF;
-            --secondary: #00D9FF;
-            --background: #0A0E27;
-            --surface: #151B3B;
-            --surface-hover: #1F2749;
-            --text: #E8EAED;
-            --text-secondary: #9BA3B4;
-            --border: #2A3152;
-            --success: #00C853;
-            --warning: #FFB300;
-            --error: #FF3D00;
-            --code-bg: #0D1117;
-            --shadow: rgba(0, 102, 255, 0.15);
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -33,1033 +19,974 @@
         }
 
         body {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--background);
-            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            color: #ffffff;
             min-height: 100vh;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
-        /* Animated gradient background */
-        .bg-gradient {
+        .stars {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            opacity: 0.4;
-            background: radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.2) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.2) 0%, transparent 50%);
-            animation: gradientShift 15s ease infinite;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        @keyframes gradientShift {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(50px, -50px) scale(1.1); }
-            66% { transform: translate(-50px, 50px) scale(0.95); }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
         }
 
-        /* Header */
-        .header {
-            background: rgba(21, 27, 59, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 1.5rem 2rem;
-            position: sticky;
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Adblock Modal */
+        .adblock-overlay {
+            position: fixed;
             top: 0;
-            z-index: 100;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
         }
 
-        .header-content {
-            max-width: 1600px;
+        .adblock-overlay.show {
+            display: flex;
+        }
+
+        .adblock-modal {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.15), rgba(255, 50, 50, 0.15));
+            border: 3px solid #ff0000;
+            border-radius: 28px;
+            padding: 50px 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: modalPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes modalPulse {
+            0%, 100% { 
+                box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 60px rgba(255, 0, 0, 0.6);
+                transform: scale(1.02);
+            }
+        }
+
+        .adblock-icon {
+            font-size: 6em;
+            margin-bottom: 25px;
+            animation: shake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .adblock-title {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #ff0000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .adblock-message {
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .adblock-steps {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .adblock-steps h3 {
+            color: #ff6b6b;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .adblock-steps ol {
+            padding-left: 25px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 2;
+        }
+
+        .adblock-steps li {
+            margin-bottom: 10px;
+        }
+
+        .adblock-refresh-btn {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #ffffff;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 14px;
+            font-size: 1.3em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .adblock-refresh-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.6);
+        }
+
+        .adblock-refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 40px;
+            height: 70px;
         }
 
         .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text);
-            text-decoration: none;
+            gap: 10px;
+            letter-spacing: -0.5px;
+            z-index: 1001;
+            position: relative;
         }
 
-        .logo-icon {
+        .nav-links {
+            display: flex;
+            gap: 5px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.95em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-links a.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-toggle {
+            display: none;
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .nav-btn {
-            padding: 0.625rem 1.25rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .nav-btn:hover {
-            background: var(--surface-hover);
-            border-color: var(--primary);
-        }
-
-        .nav-btn.primary {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .nav-btn.primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px var(--shadow);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1600px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Control Panel */
-        .control-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .controls-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .control-group {
-            display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .control-group label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .control-select {
-            background: var(--code-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.75rem;
-            color: var(--text);
-            font-size: 1rem;
-            font-family: 'Outfit', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .control-select:hover {
-            border-color: var(--primary);
-        }
-
-        .control-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
-        }
-
-        .toggle-group {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--code-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.75rem;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-group:hover {
-            border-color: var(--primary);
-        }
-
-        .toggle-label {
-            font-size: 0.9rem;
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            background: var(--border);
-            border-radius: 13px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-switch.active {
-            background: var(--primary);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.active::after {
-            transform: translateX(24px);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: 'Outfit', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+            position: relative;
+            background: transparent;
+            border: none;
+            padding: 8px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: 0 4px 15px var(--shadow);
+        .menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            border-radius: 2px;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px var(--shadow);
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
         }
 
-        .btn-secondary {
-            background: var(--surface-hover);
-            color: var(--text);
-            border: 1px solid var(--border);
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
         }
 
-        .btn-secondary:hover {
-            background: var(--code-bg);
-            border-color: var(--primary);
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
         }
 
-        /* Editor Grid */
-        .editor-grid {
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 140px 40px 60px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cards-wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 40px;
+            align-items: start;
         }
 
-        .editor-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .editor-header {
-            padding: 1rem 1.5rem;
-            background: var(--code-bg);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .editor-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .editor-badge {
-            padding: 0.25rem 0.625rem;
-            background: var(--primary);
-            color: white;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .editor-badge.success {
-            background: var(--success);
-        }
-
-        .editor-content {
-            flex: 1;
-            position: relative;
-        }
-
-        .code-editor {
-            width: 100%;
-            height: 600px;
-            background: var(--code-bg);
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
-            line-height: 1.6;
-            padding: 1.5rem;
-            border: none;
-            resize: none;
-            outline: none;
-        }
-
-        .code-editor::placeholder {
-            color: var(--text-secondary);
-            opacity: 0.5;
-        }
-
-        /* Stats Panel */
-        .stats-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .stat-card {
+        header {
             text-align: center;
-            padding: 1.5rem;
-            background: var(--code-bg);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            margin-bottom: 60px;
         }
 
-        .stat-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value {
-            font-size: 2rem;
+        h1 {
+            font-size: 5em;
+            margin-bottom: 20px;
+            color: #ffffff;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            letter-spacing: -3px;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .lifetime-promo {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
+            border: 3px solid;
+            border-image: linear-gradient(135deg, #FFD700, #FFA500) 1;
+            border-radius: 28px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lifetime-promo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .lifetime-promo-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .lifetime-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: floatGlow 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.6));
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.6));
+            }
+            50% { 
+                transform: translateY(-15px) scale(1.05);
+                filter: drop-shadow(0 0 60px rgba(255, 215, 0, 0.9));
+            }
+        }
+
+        .lifetime-title {
+            font-size: 2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        .stat-change {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .feature-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.75rem;
-            font-size: 1.25rem;
-        }
-
-        .feature-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
+        .lifetime-subtitle {
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
             line-height: 1.5;
         }
 
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
+        .lifetime-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .lifetime-feature {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
             border-radius: 12px;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            display: none;
-            align-items: center;
-            gap: 0.75rem;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .notification.show {
-            display: flex;
+        .lifetime-feature:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .lifetime-feature-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
         }
 
-        .notification-icon {
-            width: 24px;
-            height: 24px;
+        .lifetime-feature-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+
+        .lifetime-cta {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000000;
+            padding: 16px 40px;
+            border-radius: 14px;
+            font-size: 1.2em;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 50px rgba(255, 215, 0, 0.4);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lifetime-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
-        .notification-icon.success {
-            background: var(--success);
+        .lifetime-cta:hover::before {
+            width: 500px;
+            height: 500px;
         }
 
-        .notification-text {
-            font-size: 0.9rem;
-            font-weight: 500;
+        .lifetime-cta:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 70px rgba(255, 215, 0, 0.6);
+            border-color: #FFF;
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .editor-grid {
-                grid-template-columns: 1fr;
-            }
+        .lifetime-cta:active {
+            transform: translateY(-2px) scale(1.02);
+        }
 
-            .hero h1 {
-                font-size: 2.5rem;
-            }
+        .lifetime-cta span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .lifetime-badge-text {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            font-weight: 700;
+            margin-top: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+        }
+
+        .key-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 40px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .key-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: slide 4s infinite;
+        }
+
+        @keyframes slide {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .key-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 40px 100px rgba(255, 255, 255, 0.1);
+        }
+
+        .key-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .key-icon {
+            font-size: 5em;
+            margin-bottom: 25px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.3));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .key-game {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .key-status {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: 2px solid rgba(76, 175, 80, 0.5);
+        }
+
+        .get-key-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border: none;
+            padding: 22px;
+            border-radius: 16px;
+            font-size: 1.4em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .get-key-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .get-key-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .get-key-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6);
+        }
+
+        .get-key-btn:active {
+            transform: scale(0.98);
+        }
+
+        .get-key-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .key-info {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            border-radius: 14px;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.05em;
+            line-height: 2;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .key-info p {
+            margin-bottom: 10px;
+        }
+
+        .key-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .key-info strong {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
+            .nav-container {
+                padding: 0 20px;
+                height: 70px;
             }
 
-            .header {
-                padding: 1rem;
+            .logo {
+                font-size: 1.3em;
             }
 
-            .hero h1 {
-                font-size: 2rem;
+            .menu-toggle {
+                display: flex;
             }
 
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .controls-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-buttons {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(0, 0, 0, 0.98);
                 flex-direction: column;
+                padding: 30px 20px;
+                gap: 0;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                align-items: stretch;
+                overflow-y: auto;
             }
 
-            .nav-buttons {
-                display: none;
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links li {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 20px;
+                font-size: 1.15em;
+                text-align: left;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                min-height: 60px;
+            }
+
+            .nav-links a:active {
+                background: rgba(255, 255, 255, 0.15);
+                transform: scale(0.98);
+            }
+
+            h1 {
+                font-size: 2.8em;
+                letter-spacing: -2px;
+            }
+
+            .subtitle {
+                font-size: 1.2em;
+            }
+
+            .container {
+                padding: 100px 20px 50px 20px;
+            }
+
+            .cards-wrapper {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .lifetime-promo {
+                padding: 35px 25px;
+                margin-bottom: 30px;
+            }
+
+            .adblock-modal {
+                margin: 20px;
+                padding: 40px 30px;
+            }
+
+            .adblock-icon {
+                font-size: 4.5em;
+            }
+
+            .adblock-title {
+                font-size: 2em;
+            }
+
+            .adblock-message {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .adblock-modal {
+                padding: 35px 25px;
+            }
+
+            .adblock-icon {
+                font-size: 4em;
+            }
+
+            .adblock-title {
+                font-size: 1.7em;
+            }
+
+            .adblock-message {
+                font-size: 1em;
+            }
+
+            .adblock-refresh-btn {
+                font-size: 1.1em;
+                padding: 16px 35px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
+    <div class="stars" id="stars"></div>
 
-    <header class="header">
-        <div class="header-content">
-            <a href="#" class="logo">
-                <div class="logo-icon">🔒</div>
-                <span>LuaGuard</span>
-            </a>
-            <div class="nav-buttons">
-                <button class="nav-btn" onclick="showDocs()">📚 Documentation</button>
-                <button class="nav-btn primary" onclick="loadExample()">📝 Exemple</button>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="hero">
-            <h1>Protection Maximale de Code Lua</h1>
-            <p>Obfuscation professionnelle avec boucles infinies, chiffrement avancé et protection anti-reverse engineering</p>
-        </div>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">♾️</div>
-                <div class="feature-title">Infinite Loop Protection</div>
-                <div class="feature-desc">Enveloppe votre code dans des boucles infinies contrôlées pour déjouer l'analyse statique</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔐</div>
-                <div class="feature-title">String Encryption</div>
-                <div class="feature-desc">Conversion avancée en bytecode avec encodage hex, reverse et split</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌀</div>
-                <div class="feature-title">Control Flow Flattening</div>
-                <div class="feature-desc">Machine à états pour casser la logique du flux d'exécution</div>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎭</div>
-                <div class="feature-title">Variable Obfuscation</div>
-                <div class="feature-desc">Renommage ultra-confus avec caractères similaires (Il1O0)</div>
-            </div>
-        </div>
-
-        <div class="control-panel">
-            <div class="controls-grid">
-                <div class="control-group">
-                    <label>Niveau d'Obfuscation</label>
-                    <select id="obfuscationLevel" class="control-select">
-                        <option value="medium">Medium - Obfuscation standard</option>
-                        <option value="heavy">Heavy - Obfuscation avancée</option>
-                        <option value="maximum" selected>Maximum - Protection totale</option>
-                    </select>
-                </div>
-
-                <div class="control-group">
-                    <label>Protection Infinite Loop</label>
-                    <div class="toggle-group">
-                        <span class="toggle-label">Activer les boucles infinies</span>
-                        <div class="toggle-switch active" id="infiniteLoopToggle" onclick="toggleInfiniteLoop()"></div>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label>Control Flow Obfuscation</label>
-                    <div class="toggle-group">
-                        <span class="toggle-label">Aplatissement du flux</span>
-                        <div class="toggle-switch active" id="controlFlowToggle" onclick="toggleControlFlow()"></div>
-                    </div>
-                </div>
+    <!-- Adblock Detection Modal -->
+    <div class="adblock-overlay" id="adblockOverlay">
+        <div class="adblock-modal">
+            <div class="adblock-icon">🚫</div>
+            <h2 class="adblock-title">AdBlock Detected!</h2>
+            <p class="adblock-message">
+                Please disable your AdBlock to continue accessing 3xt4sy Keys.
+            </p>
+            
+            <div class="adblock-steps">
+                <h3>📋 How to disable AdBlock:</h3>
+                <ol>
+                    <li>Click on your AdBlock extension icon</li>
+                    <li>Select "Disable on this site" or "Pause"</li>
+                    <li>Refresh the page</li>
+                </ol>
             </div>
 
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="obfuscateCode()">
-                    <span>🔒</span>
-                    <span>Obfusquer le Code</span>
-                </button>
-                <button class="btn btn-secondary" onclick="copyToClipboard()">
-                    <span>📋</span>
-                    <span>Copier le Résultat</span>
-                </button>
-                <button class="btn btn-secondary" onclick="downloadCode()">
-                    <span>💾</span>
-                    <span>Télécharger</span>
-                </button>
-                <button class="btn btn-secondary" onclick="clearAll()">
-                    <span>🗑️</span>
-                    <span>Effacer</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="editor-grid">
-            <div class="editor-panel">
-                <div class="editor-header">
-                    <div class="editor-title">
-                        <span>📄</span>
-                        <span>Code Source Original</span>
-                    </div>
-                    <div class="editor-badge">Input</div>
-                </div>
-                <div class="editor-content">
-                    <textarea id="inputCode" class="code-editor" placeholder="-- Collez votre code Lua ici&#10;-- Il sera automatiquement protégé&#10;&#10;local function exemple()&#10;    print('Hello World')&#10;end"></textarea>
-                </div>
-            </div>
-
-            <div class="editor-panel">
-                <div class="editor-header">
-                    <div class="editor-title">
-                        <span>🔐</span>
-                        <span>Code Obfusqué & Protégé</span>
-                    </div>
-                    <div class="editor-badge success">Output</div>
-                </div>
-                <div class="editor-content">
-                    <textarea id="outputCode" class="code-editor" readonly placeholder="Le code obfusqué apparaîtra ici..."></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="stats-panel">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Taille Originale</div>
-                    <div class="stat-value" id="originalSize">0</div>
-                    <div class="stat-change">bytes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Taille Obfusquée</div>
-                    <div class="stat-value" id="obfuscatedSize">0</div>
-                    <div class="stat-change">bytes</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Augmentation</div>
-                    <div class="stat-value" id="sizeIncrease">+0%</div>
-                    <div class="stat-change">taille</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Variables Renommées</div>
-                    <div class="stat-value" id="varsRenamed">0</div>
-                    <div class="stat-change">identifiants</div>
-                </div>
-            </div>
+            <button class="adblock-refresh-btn" onclick="location.reload()">
+                🔄 I've Disabled AdBlock - Refresh
+            </button>
         </div>
     </div>
 
-    <div class="notification" id="notification">
-        <div class="notification-icon success">✓</div>
-        <div class="notification-text" id="notificationText">Code copié avec succès!</div>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">3xt4sy</div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <div class="container">
+        <header>
+            <h1>🔑 3xt4sy Key</h1>
+            <p class="subtitle">Premium Access Key</p>
+        </header>
+
+        <div class="cards-wrapper">
+            <div class="lifetime-promo">
+                <div class="lifetime-promo-content">
+                    <div class="lifetime-icon">👑</div>
+                    <h2 class="lifetime-title">🌟 Lifetime Access! 🌟</h2>
+                    <p class="lifetime-subtitle">Get all key in the discord with 0 pub with nothing just copy</p>
+                    
+                    <div class="lifetime-features">
+                        <div class="lifetime-feature">
+                            <div class="lifetime-feature-icon">♾️</div>
+                            <div class="lifetime-feature-text">Never Expire</div>
+                        </div>
+                        <div class="lifetime-feature">
+                            <div class="lifetime-feature-icon">⚡</div>
+                            <div class="lifetime-feature-text">Priority Support</div>
+                        </div>
+                        <div class="lifetime-feature">
+                            <div class="lifetime-feature-icon">🎯</div>
+                            <div class="lifetime-feature-text">Only 100 robux</div>
+                        </div>
+                        <div class="lifetime-feature">
+                            <div class="lifetime-feature-icon">🔥</div>
+                            <div class="lifetime-feature-text">Early Updates</div>
+                        </div>
+                    </div>
+
+                    <a href="key.html" class="lifetime-cta">
+                        <span>💎 Get lifetime Key 💎</span>
+                    </a>
+
+                    <div class="lifetime-badge-text">
+                        ✨ One-time payment • Forever access ✨
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-card">
+                <div class="key-header">
+                    <div class="key-icon">⚡</div>
+                    <div class="key-game">3xt4sy Key</div>
+                    <span class="key-status">✓ Active</span>
+                </div>
+                
+                <a href="https://junkie-development.de/get-key/gitanx" class="get-key-btn" target="_blank">
+                    <span>🔑 Get Your Key</span>
+                </a>
+
+                <div class="key-info">
+                    <p>📅 <strong>Last Update:</strong> Today</p>
+                    <p>⏰ <strong>Validity:</strong> 1 day Access</p>
+                    <p>🔐 <strong>Status:</strong> Click button to get key</p>
+                    <p>⚡ <strong>Features:</strong> Full Premium Access</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        let infiniteLoop = true;
-        let controlFlow = true;
-        let variableMap = {};
-
-        const keywords = new Set([
-            'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
-            'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
-            'return', 'then', 'true', 'until', 'while', 'goto'
-        ]);
-
-        const builtins = new Set([
-            'print', 'pairs', 'ipairs', 'tonumber', 'tostring', 'type',
-            'assert', 'error', 'pcall', 'xpcall', 'select', 'require',
-            'setmetatable', 'getmetatable', 'rawget', 'rawset', 'next',
-            'math', 'string', 'table', 'io', 'os', 'debug', 'min', 'max',
-            'insert', 'remove', 'char', 'floor', 'reverse'
-        ]);
-
-        function generateObfuscatedName() {
-            const patterns = [
-                () => {
-                    const chars = 'Il1O0';
-                    let name = '';
-                    for (let i = 0; i < Math.floor(Math.random() * 4) + 4; i++) {
-                        name += chars[Math.floor(Math.random() * chars.length)];
-                    }
-                    return name;
-                },
-                () => '_' + Array.from({length: Math.floor(Math.random() * 3) + 3}, () => 
-                    'Il1O0_'[Math.floor(Math.random() * 6)]).join(''),
-                () => {
-                    const letter = 'Il'[Math.floor(Math.random() * 2)];
-                    return letter + Array.from({length: Math.floor(Math.random() * 4) + 4}, () => 
-                        'Il1O0_'[Math.floor(Math.random() * 6)]).join('');
+        // Improved AdBlock Detection
+        function checkAdBlock() {
+            const adBlockOverlay = document.getElementById('adblockOverlay');
+            
+            // Method 1: Check if Google Ads script loaded
+            setTimeout(function() {
+                if (typeof window.adsbygoogle === 'undefined') {
+                    adBlockOverlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
                 }
-            ];
-            return patterns[Math.floor(Math.random() * patterns.length)]();
-        }
+            }, 1000);
 
-        function removeComments(code) {
-            code = code.replace(/--[^\n]*/g, '');
-            code = code.replace(/--\[\[[\s\S]*?\]\]/g, '');
-            code = code.replace(/[ \t]+/g, ' ');
-            return code.split('\n').filter(line => line.trim()).join('\n');
-        }
+            // Method 2: Create fake ad element
+            const testAd = document.createElement('div');
+            testAd.innerHTML = '&nbsp;';
+            testAd.className = 'adsbox ad-placement ad-placeholder adbadge BannerAd';
+            testAd.style.cssText = 'width: 1px !important; height: 1px !important; position: absolute !important; left: -10000px !important; top: -1000px !important;';
+            document.body.appendChild(testAd);
 
-        function obfuscateVariables(code) {
-            variableMap = {};
-            return code.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match) => {
-                if (keywords.has(match) || builtins.has(match)) {
-                    return match;
+            setTimeout(function() {
+                if (testAd.offsetHeight === 0 || testAd.clientHeight === 0) {
+                    adBlockOverlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
                 }
-                if (!variableMap[match]) {
-                    variableMap[match] = generateObfuscatedName();
-                }
-                return variableMap[match];
+                testAd.remove();
+            }, 100);
+
+            // Method 3: Try to fetch from ad server
+            fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js', {
+                method: 'HEAD',
+                mode: 'no-cors'
+            }).catch(function() {
+                adBlockOverlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
             });
         }
 
-        function obfuscateStrings(code) {
-            return code.replace(/(['"])(?:(?=(\\?))\2.)*?\1/g, (match) => {
-                const content = match.slice(1, -1);
-                if (!content) return 'string.char()';
+        // Run detection when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkAdBlock);
+        } else {
+            checkAdBlock();
+        }
 
-                const method = Math.floor(Math.random() * 4);
+        // Menu functionality
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const navOverlay = document.getElementById('navOverlay');
 
-                if (method === 0) {
-                    const bytes = Array.from(content).map(c => c.charCodeAt(0)).join(',');
-                    return `string.char(${bytes})`;
-                } else if (method === 1) {
-                    const hex = Array.from(content).map(c => '0x' + c.charCodeAt(0).toString(16)).join(',');
-                    return `string.char(${hex})`;
-                } else if (method === 2 && content.length > 3) {
-                    const mid = Math.floor(content.length / 2);
-                    const part1 = Array.from(content.slice(0, mid)).map(c => c.charCodeAt(0)).join(',');
-                    const part2 = Array.from(content.slice(mid)).map(c => c.charCodeAt(0)).join(',');
-                    return `(string.char(${part1})..string.char(${part2}))`;
-                } else {
-                    const reversed = content.split('').reverse().join('');
-                    const bytes = Array.from(reversed).map(c => c.charCodeAt(0)).join(',');
-                    return `string.reverse(string.char(${bytes}))`;
-                }
+        function toggleMenu(e) {
+            if (e) e.stopPropagation();
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            
+            if (navLinks.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            navOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', toggleMenu);
+        }
+        
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                setTimeout(closeMenu, 150);
             });
-        }
-
-        function obfuscateNumbers(code) {
-            return code.replace(/\b\d+\.?\d*\b/g, (match) => {
-                if (match.includes('.')) return match;
-                const num = parseInt(match);
-                if (isNaN(num)) return match;
-
-                const method = Math.floor(Math.random() * 4);
-
-                if (method === 0) {
-                    return '0x' + num.toString(16);
-                } else if (method === 1 && num > 5) {
-                    const a = Math.floor(Math.random() * (num - 1)) + 1;
-                    const b = num - a;
-                    return `(${a}+${b})`;
-                } else if (method === 2 && num > 10) {
-                    const shift = Math.floor(Math.random() * 3) + 1;
-                    return `(${num << shift}>>${shift})`;
-                } else {
-                    return match;
-                }
-            });
-        }
-
-        function addFakeCode(code) {
-            const fakes = [
-                () => `local ${generateObfuscatedName()} = {}`,
-                () => `local ${generateObfuscatedName()} = function() return nil end`,
-                () => `local ${generateObfuscatedName()} = 0`,
-                () => `if false then local ${generateObfuscatedName()} = true end`,
-            ];
-
-            const lines = code.split('\n');
-            const newLines = [];
-
-            for (let line of lines) {
-                newLines.push(line);
-                if (Math.random() < 0.15 && line.trim()) {
-                    const indent = line.match(/^\s*/)[0];
-                    newLines.push(indent + fakes[Math.floor(Math.random() * fakes.length)]());
-                }
-            }
-
-            return newLines.join('\n');
-        }
-
-        function wrapInInfiniteLoop(code) {
-            const loopVar = generateObfuscatedName();
-            const stateVar = generateObfuscatedName();
-            const indented = code.split('\n').map(line => '        ' + line).join('\n');
-
-            return `local ${loopVar} = true
-local ${stateVar} = 0
-while ${loopVar} do
-    if ${stateVar} == 0 then
-        ${stateVar} = 1
-${indented}
-        ${loopVar} = false
-    else
-        break
-    end
-end`;
-        }
-
-        function wrapInControlFlow(code) {
-            const stateVar = generateObfuscatedName();
-            const indented = code.split('\n').map(line => '        ' + line).join('\n');
-
-            return `local ${stateVar} = 1
-while true do
-    if ${stateVar} == 1 then
-${indented}
-        break
-    end
-end`;
-        }
-
-        function obfuscateCode() {
-            const input = document.getElementById('inputCode').value;
-            const level = document.getElementById('obfuscationLevel').value;
-
-            if (!input.trim()) {
-                showNotification('⚠️ Veuillez entrer du code à obfusquer', false);
-                return;
-            }
-
-            let code = removeComments(input);
-
-            if (level !== 'none') {
-                code = obfuscateVariables(code);
-            }
-
-            if (level === 'heavy' || level === 'maximum') {
-                code = obfuscateStrings(code);
-                code = obfuscateNumbers(code);
-            }
-
-            if (level === 'maximum') {
-                code = addFakeCode(code);
-            }
-
-            if (level === 'maximum' && controlFlow) {
-                code = wrapInControlFlow(code);
-            }
-
-            if (infiniteLoop) {
-                code = wrapInInfiniteLoop(code);
-            }
-
-            document.getElementById('outputCode').value = code;
-            updateStats(input, code);
-            showNotification('✓ Obfuscation terminée avec succès!');
-        }
-
-        function updateStats(original, obfuscated) {
-            const origSize = original.length;
-            const obfSize = obfuscated.length;
-            const increase = ((obfSize - origSize) / origSize * 100).toFixed(1);
-
-            document.getElementById('originalSize').textContent = origSize;
-            document.getElementById('obfuscatedSize').textContent = obfSize;
-            document.getElementById('sizeIncrease').textContent = (increase >= 0 ? '+' : '') + increase + '%';
-            document.getElementById('varsRenamed').textContent = Object.keys(variableMap).length;
-        }
-
-        function copyToClipboard() {
-            const output = document.getElementById('outputCode');
-            if (!output.value) {
-                showNotification('⚠️ Aucun code à copier', false);
-                return;
-            }
-            output.select();
-            document.execCommand('copy');
-            showNotification('✓ Code copié dans le presse-papier!');
-        }
-
-        function downloadCode() {
-            const output = document.getElementById('outputCode').value;
-            if (!output) {
-                showNotification('⚠️ Aucun code à télécharger', false);
-                return;
-            }
-            const blob = new Blob([output], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'obfuscated_' + Date.now() + '.lua';
-            a.click();
-            URL.revokeObjectURL(url);
-            showNotification('✓ Code téléchargé avec succès!');
-        }
-
-        function clearAll() {
-            document.getElementById('inputCode').value = '';
-            document.getElementById('outputCode').value = '';
-            variableMap = {};
-            updateStats('', '');
-            showNotification('✓ Éditeurs effacés');
-        }
-
-        function loadExample() {
-            const example = `-- Advanced Player System
-local Player = {}
-Player.__index = Player
-
-function Player:new(name, health, level)
-    local instance = setmetatable({}, Player)
-    instance.name = name
-    instance.health = health or 100
-    instance.level = level or 1
-    instance.inventory = {}
-    instance.skills = {}
-    return instance
-end
-
-function Player:takeDamage(amount)
-    self.health = self.health - amount
-    if self.health <= 0 then
-        self.health = 0
-        print(self.name .. " has been defeated!")
-        return true
-    end
-    print(self.name .. " took " .. amount .. " damage")
-    return false
-end
-
-function Player:heal(amount)
-    local maxHealth = 100
-    self.health = math.min(self.health + amount, maxHealth)
-    print(self.name .. " restored " .. amount .. " health")
-end
-
-function Player:addItem(item)
-    table.insert(self.inventory, item)
-    print("Added " .. item .. " to inventory")
-end
-
-function Player:levelUp()
-    self.level = self.level + 1
-    self.health = 100
-    print(self.name .. " reached level " .. self.level .. "!")
-end
-
--- Initialize player
-local hero = Player:new("Hero", 100, 1)
-hero:takeDamage(30)
-hero:heal(20)
-hero:addItem("Magic Sword")
-hero:levelUp()
-
-print("Final Status:")
-print("Name: " .. hero.name)
-print("Level: " .. hero.level)
-print("Health: " .. hero.health)`;
-
-            document.getElementById('inputCode').value = example;
-            showNotification('✓ Exemple chargé!');
-        }
-
-        function toggleInfiniteLoop() {
-            infiniteLoop = !infiniteLoop;
-            document.getElementById('infiniteLoopToggle').classList.toggle('active');
-        }
-
-        function toggleControlFlow() {
-            controlFlow = !controlFlow;
-            document.getElementById('controlFlowToggle').classList.toggle('active');
-        }
-
-        function showNotification(text, success = true) {
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            notificationText.textContent = text;
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        function showDocs() {
-            showNotification('📚 Documentation disponible dans le README');
-        }
-
-        // Load example on page load
-        window.addEventListener('load', () => {
-            loadExample();
         });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        if (navLinks) {
+            navLinks.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+        // Star animation
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            if (!starsContainer) return;
+            
+            for (let i = 0; i < 300; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 0.5;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        createStars();
     </script>
+    
+    <!-- Additional AdBlock Detection -->
+    <script data-cfasync="false" src="//d33f51dyacx7bd.cloudfront.net/?aydfd=1239876"></script>
 </body>
 </html>
